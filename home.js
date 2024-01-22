@@ -70,7 +70,7 @@ async function fetchTrendingMovies() {
             const posterLink = document.createElement("div");
             const posterImg = document.createElement("img");
             posterImg.draggable = false;
-            posterImg.src = `https://image.tmdb.org/t/p/w400${movie.poster}`;
+            posterImg.src = `https://image.tmdb.org/t/p/w400${movie.poster_path}`;
             posterImg.alt = movie.title;
             posterLink.appendChild(posterImg);
             posterDiv.appendChild(posterLink);
