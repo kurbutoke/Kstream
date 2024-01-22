@@ -70,7 +70,7 @@ async function fetchTrendingMovies() {
             const posterLink = document.createElement("div");
             const posterImg = document.createElement("img");
             posterImg.draggable = false;
-            posterImg.src = `https://image.tmdb.org/t/p/w400${item.movie.Poster}`;
+            posterImg.src = `https://image.tmdb.org/t/p/w400${movie.poster}`;
             posterImg.alt = movie.title;
             posterLink.appendChild(posterImg);
             posterDiv.appendChild(posterLink);
@@ -79,12 +79,12 @@ async function fetchTrendingMovies() {
             const metaSpan = document.createElement("span");
             const release = movie.release_date.split("-")[0];
             metaSpan.innerHTML = `${movie.title} (${release})`;
-            metaSpan.href = movie.mediaType === "movie" ? `${domain}/player.html?media=movie&id=${movie.Id}` : `${domain}/player.html?media=tv&id=${movie.Id}`;
+            metaSpan.href = movie.mediaType === "movie" ? `${domain}/player.html?media=movie&id=${movie.id}` : `${domain}/player.html?media=tv&id=${movie.id}`;
             metaDiv.appendChild(metaSpan);
             itemDiv.appendChild(posterDiv);
             itemDiv.appendChild(metaDiv);
             filmList.appendChild(itemDiv);
-            itemDiv.addEventListener("click", () => {const redirectionURL = `player.html?media=movie&id=${movie.Id}`;
+            itemDiv.addEventListener("click", () => {const redirectionURL = `player.html?media=movie&id=${movie.id}`;
             window.location.href = redirectionURL;
             });
         });
