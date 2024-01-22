@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XGMJJMQGQ5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XGMJJMQGQ5');
+</script>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="author" content="Kstream">
+    <meta name="keywords" content="Kstream, Kstream.net, movies online for free, streaming tv, online for free, tv series, movies online, tv shows, streaming online, streaming free without account, stream movies online free, free online movie streaming sites, watch tv online free streaming, free tv shows online streaming full episodes, free movies, movies to watch, free movies online, watch movies free, free movies website free">
+    <title>Kstream Player | Watch TV Series & Movies Online for Free!</title>
+    <meta name="description" content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./img/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="./img/favicon.png">
+    <meta property="og:site_name" content="Kstream">
+    <meta property="og:title" content="Kstream Player | Watch TV Series & Movies Online for Free!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kstream.net">
+    <meta property="og:description" content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@kstream_net" />
+    <meta name="twitter:creator" content="@kstream_net" />
+    <meta name="twitter:title" content="Kstream Player | Watch TV Series & Movies Online for Free!">
+    <meta name="twitter:description" content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
+    <meta property="og:image" content="https://kstream.net/img/logo.png" />
+    <meta name="theme-color" content="#0f0f0f">
+    <link rel="stylesheet" href="style.css">
+  </head>
+<body>
+    <div id="second">
+        <div class="wrapper">
+          <header class="">
+            <div class="container">
+              <div class="wrapper justify-content-between align-items-center">
+                <div class="start">
+                  <div class="logo">
+                    <img alt="Kstream" src="./img/logo.svg" style="height: 30px; width: 100px;cursor:pointer" onclick="window.location.href = '/'">
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+
+
+          <main>
+            <div class="watch">
+              <div id="reader-wrapper" class="no-reader">
+                <div id="reader-bg" class="reader-bg"></div>
+                <div class="container watch-page">
+                  <div class="reader-main">
+                    <select class="servers" id="selected" onchange="servers(this.value)">
+                      <option value="S1">Player 1</option>
+                      <option value="S2">Player 2</option>
+                      <option value="S3">Player 3</option>
+                      <option value="S4">Player 4 (VF)</option>
+                  </select>
+                    <iframe id="reader" class="reader" width="100%" height="100%" allowfullscreen></iframe>
+                  </div>
+                  <section id="controls">
+                    <div id="items" class="c-items" style="display:none">
+                      <div class="item light">
+                        <div class="select-se" id="season-episode-selection">
+                          <label for="seasonSelect"></label>
+                          <select id="seasonSelect"></select>
+                          <label style="margin-left: 1rem;" for="episodeSelect"></label>
+                          <select id="episodeSelect"></select>
+                          <div class="bi bi-skip-forward-circle" id="next"></divn>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              </div>
+              <div class="container watch-page">
+                <div class="aside-wrapper info-ep">
+                  <aside class="main">
+                    <section id="w-info">
+                      <div class="poster">
+                        <img id="image" src="">
+                      </div>
+                      <div class="info">
+                        <h1 id="name" class="name"></h1>
+                        <div class="buttons">
+                          <i class="bi bi-bookmark" id="bookmark"></i>
+                          <i class="bi bi-box-arrow-up" onclick="generateAndCopyLink()"></i>
+                        </div>
+                        <div class="meta">
+                          <span id="type" class="rating"></span>
+                          <span id="grade" class="bi bi-star-fill"></span>
+                          <span id="released" class="year"></span>
+                          <span id="duration" class="duration"></span>
+                        </div>
+                        <div id="description" class="description cts-wrapper"></div>
+                        <div class="detail">
+                          <div style="display:none">
+                            <div>Id:</div>
+                            <span id="mid"></span>
+                          </div>
+                          <div>
+                            <div>Type:</div>
+                            <span id="mediatype"></span>
+                          </div>
+                          <div>
+                            <div >Country:</div>
+                            <span id="country"></span>
+                          </div>
+                          <div>
+                            <div>Genre:</div>
+                            <span id="genres"></span>
+                          </div>
+                          <div>
+                            <div>Release:</div>
+                            <span id="release-date"></span>
+                          </div>
+                          <div>
+                            <div id="boom" >Director:</div>
+                            <span id="director"></span>
+                          </div>
+                          <div>
+                            <div>Production:</div>
+                            <span id="production"></span>
+                          </div>
+                          <div>
+                            <div>Cast:</div>
+                            <span id="cast"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </aside>
+                </div>
+              </div>
+            </div>
+          </main>
+          <div class="empty"></div>
+          <footer>
+            <div class="container">
+              <div class="body"></div>
+              <div class="abs">
+                <div>Kstream is top of free streaming website, where to watch TV Series & Movies online free without registration required. With a big database and great features, we're confident Kstream is the best online website in the space that you can't simply miss!</div>
+                <div class="bottom-text">This site does not store any files on our server, we only linked to the media which is hosted on 3rd party services.</div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+      <script type='text/javascript' src='./player.js' async='async'></script>
+    </html>
+</body>
+</html>
