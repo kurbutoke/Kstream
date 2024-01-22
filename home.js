@@ -57,7 +57,7 @@ searchInput.addEventListener("input", async (event) => {
 
 async function fetchTrendingMovies() {
     try {
-        const apiUrl = `https://kstream.net/trending-movies`;
+        const apiUrl = `https://api.themoviedb.org/3/trending/movie/week?language=en-US&api_key=a16ae8a9e473e167a27b616834d5be28`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         const results = data.results.slice(0, 10);
@@ -70,15 +70,16 @@ async function fetchTrendingMovies() {
             const posterLink = document.createElement("div");
             const posterImg = document.createElement("img");
             posterImg.draggable = false;
-            posterImg.src = movie.Poster;
-            posterImg.alt = movie.Title;
+            posterImg.src = `https://image.tmdb.org/t/p/w400${item.movie.Poster}`;
+            posterImg.alt = movie.title;
             posterLink.appendChild(posterImg);
             posterDiv.appendChild(posterLink);
             const metaDiv = document.createElement("div");
             metaDiv.classList.add("meta");
             const metaSpan = document.createElement("span");
-            metaSpan.innerHTML = `${movie.Title} (${movie.Release})`;
-            metaSpan.href = movie.MediaType === "Movie" ? `https://kstream.net/player.html?media=movie&id=${movie.Id}` : `https://kstream.net/player.html?media=tv&id=${movie.Id}`;
+            const release = movie.release_date.split("-")[0];
+            metaSpan.innerHTML = `${movie.title} (${release})`;
+            metaSpan.href = movie.mediaType === "movie" ? `${domain}/player.html?media=movie&id=${movie.Id}` : `${domain}/player.html?media=tv&id=${movie.Id}`;
             metaDiv.appendChild(metaSpan);
             itemDiv.appendChild(posterDiv);
             itemDiv.appendChild(metaDiv);
