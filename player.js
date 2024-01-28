@@ -1,26 +1,14 @@
 const items = document.getElementById("items");
 const headers = new Headers();
 const body = document.body;
-const nameElement = document.getElementById("name");
 const image = document.getElementById("image");
 const readerbg = document.getElementById("reader-bg");
 const reader = document.getElementById("reader");
-const mediatype = document.getElementById("mediatype");
-const type = document.getElementById("type");
-const grade = document.getElementById("grade");
-const released = document.getElementById("released");
 const duration = document.getElementById("duration");
-const description = document.getElementById("description");
-const country = document.getElementById("country");
-const genres = document.getElementById("genres");
-const releasedate = document.getElementById("release-date");
 const director = document.getElementById("director");
-const production = document.getElementById("production");
-const cast = document.getElementById("cast");
 const seasonEpisodeSelection = document.getElementById("season-episode-selection");
 const seasonSelect = document.getElementById("seasonSelect");
 const episodeSelect = document.getElementById("episodeSelect");
-const mid = document.getElementById("mid");
 const next = document.getElementById('next');
 const bookmarkIcon = document.getElementById('bookmark');
 
@@ -30,118 +18,128 @@ let selectedEpisode = null;
 
 function getURLParameters() {
     const urlParams = new URLSearchParams(window.location.search);
-    var tvParam = urlParams.get('media');
-    var idParam = urlParams.get('id');
+    const tvParam = urlParams.get('media');
+    const idParam = urlParams.get('id');
     load(tvParam, idParam);
+    updateBookmarkIcon(tvParam, idParam);
 }
 
 async function load(MediaType, itemId) {
-    const baseUrl = 'https://kstream.net';
     try {
-        const response = await fetch(`${baseUrl}/${MediaType}/${itemId}`, {});
+        const headers = {Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",};
+        const response = await fetch(
+            `https://api.themoviedb.org/3/${MediaType}/${itemId}?append_to_response=credits&language=en-US`, {
+                method: "GET",
+                headers: headers,
+            });
         const data = await response.json();
         reader.style.display = "flex";
-        nameElement.textContent = data.Title;
-        image.src = data.Poster === "https://image.tmdb.org/t/p/originalnull" ? `https://kstream.net/img/empty.png` : `${data.Poster}`;
-        readerbg.style.backgroundImage = `url("${data.Back}")`;
-        reader.src = MediaType === "movie" ? `https://vidsrc.to/embed/movie/${data.Id}` : `https://vidsrc.to/embed/tv/${data.Id}/1/1`;
+        document.getElementById("name").textContent = data.title ?? data.name;
+        image.src = data.poster_path === "" ? "https://kurbutoke.github.io/Kstream/img/empty.png" : `https://image.tmdb.org/t/p/w400${data.poster_path}`;
+        readerbg.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${data.backdrop_path}')`;
+        reader.src = MediaType === "movie" ? `https://vidsrc.to/embed/movie/${data.id}` : `https://vidsrc.to/embed/tv/${data.id}/1/1`;
         document.getElementById('selected').setAttribute("used", "S1");
         reader.style.display = "block";
-        mediatype.textContent = MediaType === "movie" ? "Movie" : "TV";
-        mid.textContent = itemId;
-        type.textContent = MediaType === "movie" ? "Movie" : "TV";
-        grade.textContent = data.Vote;
-        released.textContent = data.Year;
-        duration.textContent = data.Runtime;
-        description.textContent = data.Overview;
-        country.textContent = data.Country;
-        genres.textContent = data.Genres;
-        const options = {year: "numeric",month: "short",day: "2-digit"};
-        const formattedDate = new Date(data.Release).toLocaleDateString("en-US", options);
-        releasedate.textContent = formattedDate;
-        director.textContent = data.Director;
-        production.textContent = data.Production;
-        cast.textContent = data.Cast;
-        if (MediaType === "tv") {
+        document.getElementById("mediatype").textContent = MediaType === "movie" ? "Movie" : "TV";
+        document.getElementById("mid").textContent = itemId;
+        document.getElementById("type").textContent = MediaType === "movie" ? "Movie" : "TV";
+        document.getElementById("grade").textContent = Math.round(data.vote_average * 10) / 10;
+        const releaseDate = data.release_date ?? data.first_air_date;
+        document.getElementById("released").textContent = releaseDate.split("-")[0];
+        // director.textContent = data.credits.crew.find((member) => member.job === "Director").name ?? data.created_by.find((member) => member.job === "Director");
+        duration.textContent = data.runtime && `${data.runtime} min`;
+        document.getElementById("description").textContent = data.overview;
+        document.getElementById("country").textContent = data.production_countries.map((country) => country.name).join(", ");
+        document.getElementById("genres").textContent = data.genres.map((genre) => genre.name).join(", ");
+        document.getElementById("release-date").textContent = new Date(releaseDate).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" });
+        document.getElementById("production").textContent = data.production_companies.map((company) => company.name).join(", ");
+        document.getElementById("cast").textContent = data.credits.cast.slice(0, 5).map((actor) => actor.name).join(", ");
+
+        if (MediaType === "tv" && data.number_of_seasons > 0) {
             document.getElementById("boom").style.display = "none";
             items.style.display = "contents";
-            if (data.S > 0) {
-                seasonSelect.innerHTML = "";
-                for (let i = 1; i <= data.S; i++) {
-                    const option = document.createElement("option");
-                    option.value = i;
-                    option.textContent = `Season ${i}`;
-                    seasonSelect.setAttribute("data-max-seasons", `${data.S}`);
-                    seasonSelect.appendChild(option);
-                    duration.textContent = i > 1 ? `${i} Seasons` : `${i} Season`;
-                }
-            }
-            const response = await fetch(`${baseUrl}/tv/${data.Id}/1`, {});
-            const item = await response.json();
-            for (let i = 1; i <= item.episodes; i++) {
-                const option = document.createElement("option");
-                option.value = i;
-                option.textContent = `Episode ${i}`;
-                episodeSelect.setAttribute("data-max-episodes", `${item.episodes}`);
-                episodeSelect.appendChild(option);
-            }
-        }
-    } catch (error) {
-        console.error("Error", error);
-    }
-};
-
-async function getSeasonsAndEpisodes(itemId) {
-    const baseUrl = 'https://kstream.net';
-    try {
-        const response = await fetch(`${baseUrl}/tv/${itemId}`, {}
-        );
-
-        const data = await response.json();
-        const numberOfSeasons = data.number_of_seasons;
-
-        if (numberOfSeasons > 0) {
             seasonSelect.innerHTML = "";
-            for (let i = 1; i <= numberOfSeasons; i++) {
-                const option = document.createElement("option");
-                option.value = i;
-                option.textContent = `Season ${i}`;
-                seasonSelect.setAttribute("data-max-seasons", `${numberOfSeasons}`);
-                seasonSelect.appendChild(option);
-                if (i > 1) {
-                    duration.textContent = `${i} Seasons`;
-                } else {
-                    duration.textContent = `${i} Season`;
+            const headers = {Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",};
+        const response = await fetch(
+            `https://api.themoviedb.org/3/tv/${itemId}`, {
+                method: "GET",
+                headers: headers,
+            });
+        const data = await response.json();
+        const seasons = data.seasons;
+        if (seasons && seasons.length > 0) {
+            seasonSelect.innerHTML = "";
+            seasons.forEach(season => {
+                if (season.air_date !== null && season.episode_count > 0 && season.season_number > 0) { 
+                    const airDate = new Date(season.air_date);
+                    const today = new Date();
+                    if (airDate <= today) {
+                        const option = document.createElement("option");
+                        option.value = season.season_number;
+                        option.textContent = `Season ${season.season_number}`;
+                        seasonSelect.setAttribute("data-max-seasons", `${season.season_number}`);
+                        seasonSelect.appendChild(option);
+                        if (season.season_number > 1) {
+                            duration.textContent = `${season.season_number} Seasons`;
+                        } else {
+                            duration.textContent = `${season.season_number} Season`;
+                        }
+                    }
                 }
-            }
+            });
             seasonEpisodeSelection.style.display = "contents";
         }
+
+            try {
+                const seasonResponse = await fetch(`https://api.themoviedb.org/3/tv/${itemId}/season/1`, {
+                    method: "GET",
+                    headers: headers,
+                });
+                const seasonData = await seasonResponse.json();
+                const episodes = seasonData.episodes;
+                const today = new Date();
+                episodes.forEach(episode => {
+                    const airDate = new Date(episode.air_date);
+                    if (airDate <= today && episode.episode_number > 0) {
+                        const option = document.createElement("option");
+                        option.value = episode.episode_number;
+                        option.textContent = `Episode ${episode.episode_number}`;
+                        episodeSelect.setAttribute("data-max-episodes", `${episode.episode_number}`);
+                        episodeSelect.appendChild(option);
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching season data:", error);
+            }
+        }
     } catch (error) {
-        console.error(
-            "Error",
-            error
-        );
+        console.error("Error fetching media data:", error);
     }
-};
+}; 
 
 seasonSelect.addEventListener("change", async () => {
     selectedSeason = seasonSelect.value;
-    const baseUrl = 'https://kstream.net';
+    episodeSelect.innerHTML = "";
+    const headers = {Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",};
     try {
-        const response = await fetch(`${baseUrl}/tv/${mid.innerText}/${selectedSeason}`);
+        const seasonResponse = await fetch(`https://api.themoviedb.org/3/tv/${mid.innerText}/season/${selectedSeason}`, {
+                    method: "GET",
+                    headers: headers,
+                });
+                const seasonData = await seasonResponse.json();
+                const episodes = seasonData.episodes;
+                const today = new Date();
 
-        if (!response.ok) {
-            throw new Error(`Fetch request failed with status: ${response.status}`);
-        }
-        const data = await response.json();
-        episodeSelect.innerHTML = "";
-        for (let i = 1; i <= data.episodes; i++) {
-            const option = document.createElement("option");
-            option.value = i;
-            option.textContent = `Episode ${i}`;
-            episodeSelect.setAttribute("data-max-episodes", `${data.episodes}`);
-            episodeSelect.appendChild(option);
-        }
+                episodes.forEach(episode => {
+                    const airDate = new Date(episode.air_date);
+                    if (airDate <= today) {
+                        const option = document.createElement("option");
+                        option.value = episode.episode_number;
+                        option.textContent = `Episode ${episode.episode_number}`;
+                        episodeSelect.setAttribute("data-max-episodes", `${episodes.length}`);
+                        episodeSelect.appendChild(option);
+                    }
+                });
     } catch (error) {
         console.error('Error', error);
     }
@@ -173,99 +171,57 @@ function generateAndCopyLink() {
                 });
 };
 
-function toggleFavorite(mediaType, mediaId) {
-    const favorites = getFavorites();
-    const favoriteIndex = favorites.findIndex(favorite => favorite.media === mediaType && favorite.id === mediaId);
-    if (favoriteIndex !== -1) {
-        favorites.splice(favoriteIndex, 1);
-    } else {
-        favorites.push({ media: mediaType, id: mediaId });
-    }
-    setFavorites(favorites);
-    updateBookmarkIcon(mediaType, mediaId);
-}
-
-function getFavorites() {
-    const favoritesStorage = localStorage.getItem('favorites');
-    return favoritesStorage ? JSON.parse(favoritesStorage) : [];
-}
-
-function setFavorites(favorites) {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-}
-
-function updateBookmarkIcon(mediaType, mediaId) {
-    const bookmarkIcon = document.getElementById('bookmark');
-    const favorites = getFavorites();
-    const isFavorite = favorites.some(favorite => 
-        favorite.media.toLowerCase() === mediaType.toLowerCase() && 
-        favorite.id === mediaId
-    );
-    if (isFavorite) {
-        bookmarkIcon.classList.remove('bi-bookmark');
-        bookmarkIcon.classList.add('bi-bookmark-fill');
-    } else {
-        bookmarkIcon.classList.remove('bi-bookmark-fill');
-        bookmarkIcon.classList.add('bi-bookmark');
-    }
-}
-
 function servers(serv) {
     const urlParams = new URLSearchParams(window.location.search);
     const media = urlParams.get('media');
+    const seasonSelect = document.getElementById('seasonSelect');
+    const episodeSelect = document.getElementById('episodeSelect');
+
+    let streamingURL = '';
 
     if (media === "movie") {
-        if (serv === "S1"){
-            const streamingURL = `https://vidsrc.to/embed/movie/${mid.innerText}`;
-            reader.src = streamingURL;
+        switch(serv) {
+            case "S1":
+                streamingURL = `https://vidsrc.to/embed/movie/${mid.innerText}`;
+                break;
+            case "S2":
+                streamingURL = `https://vidsrc.me/embed/movie?tmdb=${mid.innerText}&color=00acc1`;
+                break;
+            case "S3":
+                streamingURL = `https://multiembed.mov/?video_id=${mid.innerText}&tmdb=1`;
+                break;
+            case "S4":
+                streamingURL = `https://frembed.com/api/film.php?id=${mid.innerText}`;
+                break;
+            default:
+                break;
         }
-        if (serv === "S2"){
-            const streamingURL = `https://vidsrc.me/embed/movie?tmdb=${mid.innerText}&color=00acc1`;
-            reader.src = streamingURL;
+    } else {
+        const s = seasonSelect.value;
+        const e = episodeSelect.value;
+
+        switch(serv) {
+            case "S1":
+                streamingURL = `https://vidsrc.to/embed/tv/${mid.innerText}/${s}/${e}`;
+                break;
+            case "S2":
+                streamingURL = `https://vidsrc.me/embed/tv?tmdb=${mid.innerText}&season=${s}&episode=${e}&color=00acc1`;
+                break;
+            case "S3":
+                streamingURL = `https://multiembed.mov/?video_id=${mid.innerText}&tmdb=1&s=${s}&e=${e}`;
+                break;
+            case "S4":
+                streamingURL = `https://frembed.com/api/serie.php?id=${mid.innerText}&sa=${s}&epi=${e}`;
+                break;
+            default:
+                break;
         }
-        if (serv === "S3"){
-            const streamingURL = `https://multiembed.mov/?video_id=${mid.innerText}&tmdb=1`;
-            reader.src = streamingURL;
-        }
-        if (serv === "S4"){
-            const streamingURL = `https://frembed.com/api/film.php?id=${mid.innerText}`;
-            reader.src = streamingURL;
-        }
+
+        reader.style.display = "block";
+        document.getElementById('selected').setAttribute("used", serv);
     }
-    else {
-        if (serv === "S1"){
-            s = document.getElementById('seasonSelect').value;
-            e = document.getElementById('episodeSelect').value;
-            const streamingURL = `https://vidsrc.to/embed/tv/${mid.innerText}/${s}/${e}`;
-            reader.src = streamingURL;
-            reader.style.display = "block";
-            document.getElementById('selected').setAttribute("used", "S1");
-        }
-        if (serv === "S2"){
-            s = document.getElementById('seasonSelect').value;
-            e = document.getElementById('episodeSelect').value;
-            const streamingURL = `https://vidsrc.me/embed/tv?tmdb=${mid.innerText}&season=${s}&episode=${e}&color=00acc1`;
-            reader.src = streamingURL;
-            reader.style.display = "block";
-            document.getElementById('selected').setAttribute("used", "S2");
-        }
-        if (serv === "S3"){
-            s = document.getElementById('seasonSelect').value;
-            e = document.getElementById('episodeSelect').value;
-            const streamingURL = `https://multiembed.mov/?video_id=${mid.innerText}&tmdb=1&s=${s}&e=${e}`;
-            reader.src = streamingURL;
-            reader.style.display = "block";
-            document.getElementById('selected').setAttribute("used", "S3");
-        }
-        if (serv === "S4"){
-            s = document.getElementById('seasonSelect').value;
-            e = document.getElementById('episodeSelect').value;
-            const streamingURL = `https://frembed.com/api/serie.php?id=${mid.innerText}&sa=${s}&epi=${e}`;
-            reader.src = streamingURL;
-            reader.style.display = "block";
-            document.getElementById('selected').setAttribute("used", "S4");
-        }
-    }
+
+    reader.src = streamingURL;
 }
 
 seasonSelect.addEventListener("change", async () => {
@@ -300,17 +256,63 @@ next.addEventListener('click', () => {
     }
 });
 
+// Fonction pour récupérer les favoris depuis le stockage local
+function getFavorites() {
+    return JSON.parse(localStorage.getItem('favorites')) || [];
+}
+
+// Fonction pour définir les favoris dans le stockage local
+function setFavorites(favorites) {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+// Fonction pour ajouter un favori
+function addFavorite(mediaType, mediaId) {
+    const favorites = getFavorites();
+    favorites.push({ media: mediaType.toLowerCase(), id: mediaId });
+    setFavorites(favorites);
+}
+
+// Fonction pour supprimer un favori
+function removeFavorite(mediaType, mediaId) {
+    let favorites = getFavorites();
+    favorites = favorites.filter(favorite => !(favorite.media === mediaType.toLowerCase() && favorite.id === mediaId));
+    setFavorites(favorites);
+}
+
+// Fonction pour vérifier si un média est un favori
+function isFavorite(mediaType, mediaId) {
+    const favorites = getFavorites();
+    return favorites.some(favorite => favorite.media === mediaType.toLowerCase() && favorite.id === mediaId);
+}
+
+// Fonction pour basculer l'état du favori
+function toggleFavorite(mediaType, mediaId) {
+    if (isFavorite(mediaType.toLowerCase(), mediaId)) {
+        removeFavorite(mediaType.toLowerCase(), mediaId); // Si c'est un favori, le supprimer
+    } else {
+        addFavorite(mediaType.toLowerCase(), mediaId); // Sinon, l'ajouter
+    }
+    updateBookmarkIcon(mediaType.toLowerCase(), mediaId); // Mettre à jour l'icône de favori
+}
+
+// Fonction pour mettre à jour l'icône de favori
+function updateBookmarkIcon(mediaType, mediaId) {
+    const bookmarkIcon = document.getElementById('bookmark');
+    if (isFavorite(mediaType, mediaId)) {
+        bookmarkIcon.classList.remove('bi-bookmark');
+        bookmarkIcon.classList.add('bi-bookmark-fill');
+    } else {
+        bookmarkIcon.classList.remove('bi-bookmark-fill');
+        bookmarkIcon.classList.add('bi-bookmark');
+    }
+}
+
+// Fonction pour gérer le clic sur l'icône de favori
 bookmarkIcon.addEventListener('click', function () {
     const mediaType = document.getElementById('mediatype').textContent;
     const mediaId = document.getElementById('mid').textContent;
     toggleFavorite(mediaType, mediaId);
-});
-
-window.addEventListener('load', function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const mediaType = urlParams.get('media');
-    const mediaId = urlParams.get('id');
-    updateBookmarkIcon(mediaType, mediaId);
 });
 
 window.addEventListener('load', getURLParameters);
