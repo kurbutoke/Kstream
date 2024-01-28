@@ -150,7 +150,7 @@ function generateAndCopyLink() {
     const midElement = document.getElementById('mid');
     const media = mediaElement.textContent;
     const id = midElement.textContent;
-    const linkURL = media ==="Movie" ? `https://kstream.net/0.html?media=movie&id=${id}` : `https://kstream.net/0.html?media=tv&id=${id}`;
+    const linkURL = media ==="Movie" ? `https://kurbutoke.github.io/Kstream/player.html?media=movie&id=${id}` : `https://kurbutoke.github.io/Kstream/player.html?media=tv&id=${id}`;
     navigator.clipboard.writeText(linkURL)
                 .then(() => {
                     if (navigator.share) {
