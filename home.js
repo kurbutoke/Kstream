@@ -9,7 +9,6 @@ const domain = "https://kurbutoke.github.io/Kstream"
 searchInput.addEventListener("input", debounce(async (event) => {
     const searchTerm = event.target.value.trim();
     searchResults.innerHTML = "";
-
     if (searchTerm.length > 0) {
         try {
             searchResults.style.display = "inline";
@@ -19,9 +18,7 @@ searchInput.addEventListener("input", debounce(async (event) => {
                     method: "GET",
                     headers: headers,
                 });
-
             const data = await response.json();
-
             data.results.slice(0, 5).forEach((item) => {
                 const mediaItem = document.createElement("div");
                 const poster = document.createElement("img");
@@ -149,7 +146,6 @@ async function fetchTrendingTV() {
 async function fetchFavorites() {
     const favoritesData = localStorage.getItem('favorites');
     const favorites = JSON.parse(favoritesData);
-
     if (!favorites || favorites.length === 0 || favorites === "[]") {
         const filmList = document.getElementById("favorites-items");
         const itemDiv = document.createElement("div");
@@ -163,7 +159,6 @@ async function fetchFavorites() {
             const id = favorite.id;
             const headers = {Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",};
             const apiUrl = `https://api.themoviedb.org/3/${media}/${id}?append_to_response=credits&language=en-US`;
-
             try {
                 const response = await fetch(apiUrl, {
                     method: 'GET',
@@ -217,7 +212,6 @@ function toggleTab(activeId, inactiveId1, inactiveId2, activeElementId, inactive
     var activeElement = document.getElementById(activeElementId);
     var inactiveElement1 = document.getElementById(inactiveElementId1);
     var inactiveElement2 = document.getElementById(inactiveElementId2);
-
     activeTab.classList.add('active');
     inactiveTab1.classList.remove('active');
     inactiveTab2.classList.remove('active');
@@ -230,10 +224,6 @@ window.addEventListener("load", (event) => {
     fetchTrendingMovies();
     fetchTrendingTV();
     fetchFavorites();
-});
-
-document.addEventListener('focusin', function() {
-    document.body.style.zoom = '100%';
 });
 
 //document.addEventListener("contextmenu", function(e) {
