@@ -25,7 +25,7 @@ searchInput.addEventListener("input", debounce(async (event) => {
             data.results.slice(0, 5).forEach((item) => {
                 const mediaItem = document.createElement("div");
                 const poster = document.createElement("img");
-                poster.src = item.poster_path === null ? `${domain}/img/empty.png` : `https://image.tmdb.org/t/p/original${item.poster_path}`;
+                poster.src = item.poster_path === null ? `${domain}/img/empty.png` : `https://image.tmdb.org/t/p/w400${item.poster_path}`;
                 poster.className = "poster";
                 const mediaItemDetails = document.createElement("div");
                 mediaItemDetails.className = "info";
