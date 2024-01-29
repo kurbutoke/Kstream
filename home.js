@@ -232,6 +232,10 @@ window.addEventListener("load", (event) => {
     fetchFavorites();
 });
 
+document.addEventListener('focusin', function() {
+    document.body.style.zoom = '100%';
+});
+
 //document.addEventListener("contextmenu", function(e) {
 //    e.preventDefault();
 //});
