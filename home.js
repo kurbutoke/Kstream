@@ -25,7 +25,7 @@ searchInput.addEventListener("input", debounce(async (event) => {
             data.results.slice(0, 5).forEach((item) => {
                 const mediaItem = document.createElement("div");
                 const poster = document.createElement("img");
-                poster.src = item.poster_path === null ? `${domain}/img/empty.png` : `https://image.tmdb.org/t/p/w400${item.poster_path}`;
+                poster.src = item.poster_path === null ? `${domain}/img/empty.png` : `https://image.tmdb.org/t/p/w300${item.poster_path}`;
                 poster.className = "poster";
                 const mediaItemDetails = document.createElement("div");
                 mediaItemDetails.className = "info";
@@ -85,7 +85,7 @@ async function fetchTrendingMovies() {
             const posterLink = document.createElement("div");
             const posterImg = document.createElement("img");
             posterImg.draggable = false;
-            posterImg.src = `https://image.tmdb.org/t/p/w400${movie.poster_path}`;
+            posterImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
             posterImg.alt = movie.title;
             posterLink.appendChild(posterImg);
             posterDiv.appendChild(posterLink);
@@ -123,7 +123,7 @@ async function fetchTrendingTV() {
             const posterLink = document.createElement("div");
             const posterImg = document.createElement("img");
             posterImg.draggable = false;
-            posterImg.src = `https://image.tmdb.org/t/p/w400${tv.poster_path}`;
+            posterImg.src = `https://image.tmdb.org/t/p/w300${tv.poster_path}`;
             posterImg.alt = tv.name;
             posterImg.loading = "lazy";
             posterLink.appendChild(posterImg);
@@ -182,7 +182,7 @@ async function fetchFavorites() {
                 const posterLink = document.createElement("div");
                 const posterImg = document.createElement("img");
                 posterImg.draggable = false;
-                posterImg.src = `https://image.tmdb.org/t/p/w400${data.poster_path}`; 
+                posterImg.src = `https://image.tmdb.org/t/p/w300${data.poster_path}`; 
                 const title = data.title ?? data.name;
                 posterImg.alt = title;
                 posterImg.loading = "lazy";
