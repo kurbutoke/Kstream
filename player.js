@@ -150,7 +150,7 @@ function generateAndCopyLink() {
     const midElement = document.getElementById('mid');
     const media = mediaElement.textContent;
     const id = midElement.textContent;
-    const linkURL = media ==="Movie" ? `https://kurbutoke.github.io/Kstream/player.html?media=movie&id=${id}` : `https://kurbutoke.github.io/Kstream/player.html?media=tv&id=${id}`;
+    const linkURL = media === "Movie" ? `https://kurbutoke.github.io/Kstream/player.html?media=movie&id=${id}` : `https://kurbutoke.github.io/Kstream/player.html?media=tv&id=${id}`;
     navigator.clipboard.writeText(linkURL)
                 .then(() => {
                     if (navigator.share) {
@@ -256,47 +256,40 @@ next.addEventListener('click', () => {
     }
 });
 
-// Fonction pour récupérer les favoris depuis le stockage local
 function getFavorites() {
     return JSON.parse(localStorage.getItem('favorites')) || [];
 }
 
-// Fonction pour définir les favoris dans le stockage local
 function setFavorites(favorites) {
     localStorage.setItem('favorites', JSON.stringify(favorites));
 }
 
-// Fonction pour ajouter un favori
 function addFavorite(mediaType, mediaId) {
     const favorites = getFavorites();
     favorites.push({ media: mediaType.toLowerCase(), id: mediaId });
     setFavorites(favorites);
 }
 
-// Fonction pour supprimer un favori
 function removeFavorite(mediaType, mediaId) {
     let favorites = getFavorites();
     favorites = favorites.filter(favorite => !(favorite.media === mediaType.toLowerCase() && favorite.id === mediaId));
     setFavorites(favorites);
 }
 
-// Fonction pour vérifier si un média est un favori
 function isFavorite(mediaType, mediaId) {
     const favorites = getFavorites();
     return favorites.some(favorite => favorite.media === mediaType.toLowerCase() && favorite.id === mediaId);
 }
 
-// Fonction pour basculer l'état du favori
 function toggleFavorite(mediaType, mediaId) {
     if (isFavorite(mediaType.toLowerCase(), mediaId)) {
-        removeFavorite(mediaType.toLowerCase(), mediaId); // Si c'est un favori, le supprimer
+        removeFavorite(mediaType.toLowerCase(), mediaId);
     } else {
-        addFavorite(mediaType.toLowerCase(), mediaId); // Sinon, l'ajouter
+        addFavorite(mediaType.toLowerCase(), mediaId);
     }
-    updateBookmarkIcon(mediaType.toLowerCase(), mediaId); // Mettre à jour l'icône de favori
+    updateBookmarkIcon(mediaType.toLowerCase(), mediaId);
 }
 
-// Fonction pour mettre à jour l'icône de favori
 function updateBookmarkIcon(mediaType, mediaId) {
     const bookmarkIcon = document.getElementById('bookmark');
     if (isFavorite(mediaType, mediaId)) {
@@ -308,7 +301,6 @@ function updateBookmarkIcon(mediaType, mediaId) {
     }
 }
 
-// Fonction pour gérer le clic sur l'icône de favori
 bookmarkIcon.addEventListener('click', function () {
     const mediaType = document.getElementById('mediatype').textContent;
     const mediaId = document.getElementById('mid').textContent;
