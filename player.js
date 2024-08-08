@@ -37,7 +37,7 @@ async function load(MediaType, itemId) {
         document.getElementById("name").textContent = data.title ?? data.name;
         image.src = data.poster_path === "" ? "https://kurbutoke.github.io/Kstream/img/empty.png" : `https://image.tmdb.org/t/p/w300${data.poster_path}`;
         readerbg.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${data.backdrop_path}')`;
-        reader.src = MediaType === "movie" ? `https://vidsrc.to/embed/movie/${data.id}` : `https://vidsrc.to/embed/tv/${data.id}/1/1`;
+        reader.src = MediaType === "movie" ? `https://vidsrc.me/embed/movie/${data.id}` : `https://vidsrc.me/embed/tv/${data.id}/1/1`;
         document.getElementById('selected').setAttribute("used", "S1");
         reader.style.display = "block";
         document.getElementById("mediatype").textContent = MediaType === "movie" ? "Movie" : "TV";
@@ -181,9 +181,9 @@ function servers(serv) {
 
     if (media === "movie") {
         switch(serv) {
-            case "S1":
-                streamingURL = `https://vidsrc.to/embed/movie/${mid.innerText}`;
-                break;
+            //case "S1":
+            //    streamingURL = `https://vidsrc.to/embed/movie/${mid.innerText}`;
+            //    break;
             case "S2":
                 streamingURL = `https://vidsrc.me/embed/movie?tmdb=${mid.innerText}&color=00acc1`;
                 break;
@@ -201,9 +201,9 @@ function servers(serv) {
         const e = episodeSelect.value;
 
         switch(serv) {
-            case "S1":
-                streamingURL = `https://vidsrc.to/embed/tv/${mid.innerText}/${s}/${e}`;
-                break;
+            //case "S1":
+            //    streamingURL = `https://vidsrc.to/embed/tv/${mid.innerText}/${s}/${e}`;
+            //    break;
             case "S2":
                 streamingURL = `https://vidsrc.me/embed/tv?tmdb=${mid.innerText}&season=${s}&episode=${e}&color=00acc1`;
                 break;
