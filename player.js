@@ -292,8 +292,7 @@ last.addEventListener('click', async () => {
                 episodeSelect.appendChild(option);
             }
         });
-
-        const maxEpisode = episodes.length;
+        const maxEpisode = episodeSelect.length;
         episodeSelect.value = maxEpisode;
         selectedEpisode = maxEpisode;
         episodeSelect.setAttribute("data-max-episodes", `${maxEpisode}`);
