@@ -296,6 +296,7 @@ last.addEventListener('click', async () => {
         const maxEpisode = episodes.length;
         episodeSelect.value = maxEpisode;
         selectedEpisode = maxEpisode;
+        episodeSelect.setAttribute("data-max-episodes", `${maxEpisode}`);
 
         servers(document.getElementById('selected').getAttribute('used'));
     } catch (error) {
