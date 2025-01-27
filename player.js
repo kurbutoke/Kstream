@@ -11,6 +11,8 @@ const seasonSelect = document.getElementById("seasonSelect");
 const episodeSelect = document.getElementById("episodeSelect");
 const next = document.getElementById('next');
 const bookmarkIcon = document.getElementById('bookmark');
+const last = document.getElementById('last');
+const refresh = document.getElementById('refresh');
 
 let selectedSeriesId = null;
 let selectedSeason = null;
@@ -120,28 +122,37 @@ async function load(MediaType, itemId) {
 seasonSelect.addEventListener("change", async () => {
     selectedSeason = seasonSelect.value;
     episodeSelect.innerHTML = "";
-    const headers = {Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",};
-    try {
-        const seasonResponse = await fetch(`https://api.themoviedb.org/3/tv/${mid.innerText}/season/${selectedSeason}`, {
-                    method: "GET",
-                    headers: headers,
-                });
-                const seasonData = await seasonResponse.json();
-                const episodes = seasonData.episodes;
-                const today = new Date();
+    const headers = {
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",
+    };
 
-                episodes.forEach(episode => {
-                    const airDate = new Date(episode.air_date);
-                    if (airDate <= today) {
-                        const option = document.createElement("option");
-                        option.value = episode.episode_number;
-                        option.textContent = `Episode ${episode.episode_number}`;
-                        episodeSelect.setAttribute("data-max-episodes", `${episodes.length}`);
-                        episodeSelect.appendChild(option);
-                    }
-                });
+    try {
+        const seasonResponse = await fetch(
+            `https://api.themoviedb.org/3/tv/${mid.innerText}/season/${selectedSeason}`,
+            { method: "GET", headers: headers }
+        );
+        const seasonData = await seasonResponse.json();
+        const episodes = seasonData.episodes;
+        const today = new Date();
+
+        episodes.forEach((episode) => {
+            const airDate = new Date(episode.air_date);
+            if (airDate <= today) {
+                const option = document.createElement("option");
+                option.value = episode.episode_number;
+                option.textContent = `Episode ${episode.episode_number}`;
+                episodeSelect.setAttribute("data-max-episodes", `${episodes.length}`);
+                episodeSelect.appendChild(option);
+            }
+        });
+
+        if (episodes.length > 0) {
+            episodeSelect.value = "1";
+            selectedEpisode = 1;
+            servers(document.getElementById("selected").getAttribute("used"));
+        }
     } catch (error) {
-        console.error('Error', error);
+        console.error("Error fetching season data:", error);
     }
 });
 
@@ -253,6 +264,42 @@ next.addEventListener('click', () => {
     } else {
         episodeSelect.value = (currentEpisode + 1).toString();
         servers(document.getElementById('selected').getAttribute('used'));
+    }
+});
+
+last.addEventListener('click', async () => {
+    try {
+        const maxSeasons = parseInt(seasonSelect.getAttribute('data-max-seasons'));
+        seasonSelect.value = maxSeasons;
+        selectedSeason = maxSeasons;
+        const headers = {
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",
+        }
+        const seasonResponse = await fetch(
+            `https://api.themoviedb.org/3/tv/${mid.innerText}/season/${maxSeasons}`,
+            { method: "GET", headers }
+        );
+        const seasonData = await seasonResponse.json();
+        const episodes = seasonData.episodes;
+        const today = new Date();
+        episodeSelect.innerHTML = "";
+        episodes.forEach((episode) => {
+            const airDate = new Date(episode.air_date);
+            if (airDate <= today && episode.episode_number > 0) {
+                const option = document.createElement("option");
+                option.value = episode.episode_number;
+                option.textContent = `Episode ${episode.episode_number}`;
+                episodeSelect.appendChild(option);
+            }
+        });
+
+        const maxEpisode = episodes.length;
+        episodeSelect.value = maxEpisode;
+        selectedEpisode = maxEpisode;
+
+        servers(document.getElementById('selected').getAttribute('used'));
+    } catch (error) {
+        console.error('Erreur lors de la sélection du dernier épisode :', error);
     }
 });
 
