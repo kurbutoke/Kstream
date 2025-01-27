@@ -304,6 +304,10 @@ last.addEventListener('click', async () => {
     }
 });
 
+refresh.addEventListener('click', async () => {
+        reader.src = reader.src;
+});
+
 function getFavorites() {
     return JSON.parse(localStorage.getItem('favorites')) || [];
 }
