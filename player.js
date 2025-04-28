@@ -191,7 +191,7 @@ function servers(serv) {
                 streamingURL = `https://multiembed.mov/?video_id=${mid.innerText}&tmdb=1`;
                 break;
             case "S4":
-                streamingURL = `https://frembed.pro/api/film.php?id=${mid.innerText}`;
+                streamingURL = `https://frembed.ink/api/film.php?id=${mid.innerText}`;
                 break;
             default:
                 break;
@@ -211,7 +211,7 @@ function servers(serv) {
                 streamingURL = `https://multiembed.mov/?video_id=${mid.innerText}&tmdb=1&s=${s}&e=${e}`;
                 break;
             case "S4":
-                streamingURL = `https://frembed.pro/api/serie.php?id=${mid.innerText}&sa=${s}&epi=${e}`;
+                streamingURL = `https://frembed.ink/api/serie.php?id=${mid.innerText}&sa=${s}&epi=${e}`;
                 break;
             default:
                 break;
