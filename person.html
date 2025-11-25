@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=no">
+    <meta name="author" content="Kstream">
+    <title>Person Details | Kstream</title>
+    <meta name="description" content="Kstream - Actor Profile">
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#0f0f0f">
+  </head>
+<body>
+    <div class="wrapper">
+      <header>
+        <div class="container">
+          <div class="wrapper justify-content-center align-items-center">
+            <div class="i-head">
+              <div class="logo w-100 text-center d-block font-weight-bold">
+                <img class="home" id="home" onclick="window.location.href = '/Kstream/'" src="./img/logo.svg" alt="Kstream" width="141" height="47" style="cursor: pointer;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div class="container">
+            
+          <!-- Profile Section -->
+          <div class="aside-wrapper info-ep">
+             <aside class="main">
+                <section id="w-info">
+                  <div class="poster">
+                    <img id="person-image" src="./img/empty.png" alt="">
+                  </div>
+                  <div class="info">
+                    <div class="info-header">
+                        <div>
+                            <h1 id="person-name" class="name">Loading...</h1>
+                            <div id="person-known-for-department" class="tagline" style="font-style: italic; color: #a0a0a0; margin-bottom: 10px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="person-biography" class="description" style="margin-bottom: 20px;"></div>
+                    
+                    <div class="detail">
+                      <div>
+                        <div>Born:</div>
+                        <span id="person-birthday"></span>
+                      </div>
+                      <div>
+                        <div>Place of Birth:</div>
+                        <span id="person-place-of-birth"></span>
+                      </div>
+                      <div>
+                         <div>Died:</div>
+                         <span id="person-deathday" style="display:none"></span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Known For Section -->
+                <section id="known-for" style="margin-top: 3rem;">
+                    <div class="section-header">
+                        <div class="section-title">Known For</div>
+                        <div class="section-tabs">
+                            <div class="tab-pill active" onclick="filterCredits('all', this)">All</div>
+                            <div class="tab-pill" onclick="filterCredits('movie', this)">Movies</div>
+                            <div class="tab-pill" onclick="filterCredits('tv', this)">TV Shows</div>
+                        </div>
+                    </div>
+                    <div class="movies items" id="credits-items" style="flex-wrap: wrap; overflow: visible; justify-content: center; height: auto; max-height: none; width: 100%; left: auto; right: auto; margin-left: 0; margin-right: 0; padding: 0; gap: 20px;">
+                        <!-- Grid items will be injected here -->
+                    </div>
+                </section>
+
+             </aside>
+          </div>
+
+        </div>
+      </main>
+
+      <footer>
+        <div class="container">
+          <div class="abs">
+            <p style="margin-bottom: 5px">Kstream is top of free streaming website.</p>
+            <p class="bottom-text">This site does not store any files on our server.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+</body>
+<script type='text/javascript' src='./person.js' async='async'></script>
+</html>

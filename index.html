@@ -1,91 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=no">
-    <meta name="author" content="Kstream">
-    <meta name="keywords" content="Kstream, Kstream.net, movies online for free, streaming tv, online for free, tv series, movies online, tv shows, streaming online, streaming free without account, stream movies online free, free online movie streaming sites, watch tv online free streaming, free tv shows online streaming full episodes, free movies, movies to watch, free movies online, watch movies free, free movies website free">
-    <title>Kstream | Watch TV Series & Movies Online for Free!</title>
-    <meta name="description" content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
-    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="./img/favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="./img/favicon.png">
-    <meta property="og:site_name" content="Kstream">
-    <meta property="og:title" content="Kstream | Watch TV Series & Movies Online for Free!">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://kurbutoke.github.io/Kstream">
-    <meta property="og:description" content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@kstream_net" />
-    <meta name="twitter:creator" content="@kstream_net" />
-    <meta name="twitter:title" content="Kstream | Watch TV Series & Movies Online for Free on Kstream.net!">
-    <meta name="twitter:description" content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
-    <meta property="og:image" content="https://kurbutoke.github.io/Kstream/img/logo.png" />
-    <meta name="theme-color" content="#0f0f0f">
-    <link rel="stylesheet" href="style.css">
-  </head>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=no">
+  <meta name="author" content="Kstream">
+  <meta name="keywords"
+    content="Kstream, Kstream.net, movies online for free, streaming tv, online for free, tv series, movies online, tv shows, streaming online, streaming free without account, stream movies online free, free online movie streaming sites, watch tv online free streaming, free tv shows online streaming full episodes, free movies, movies to watch, free movies online, watch movies free, free movies website free">
+  <title>Kstream | Watch TV Series & Movies Online for Free!</title>
+  <meta name="description"
+    content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="./img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="./img/favicon.png">
+  <meta property="og:site_name" content="Kstream">
+  <meta property="og:title" content="Kstream | Watch TV Series & Movies Online for Free!">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kurbutoke.github.io/Kstream">
+  <meta property="og:description"
+    content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@kstream_net" />
+  <meta name="twitter:creator" content="@kstream_net" />
+  <meta name="twitter:title" content="Kstream | Watch TV Series & Movies Online for Free on Kstream.net!">
+  <meta name="twitter:description"
+    content="Kstream.net - The best place to Watch TV Series & Movies Online for Free! With HD quality and no registration required!">
+  <meta property="og:image" content="https://kurbutoke.github.io/Kstream/img/logo.png" />
+  <meta name="theme-color" content="#0f0f0f">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+
 <body>
-    <div class="wrapper">
-      <main class="index">
-        <div class="container sm">
-          <div class="i-wrapper">
-            <div class="i-head">
-              <div class="logo w-100 text-center d-block font-weight-bold">
-                <img class="home" id="home" onclick="location.reload();" src="./img/logo.svg" alt="Kstream" width="141" height="47">
-              </div>
+  <div class="wrapper">
+    <main class="index">
+      <div class="container sm">
+        <div class="i-wrapper">
+          <div class="i-head">
+            <div class="logo w-100 text-center d-block font-weight-bold">
+              <img class="home" id="home" onclick="location.reload();" src="./img/logo.svg" alt="Kstream" width="141"
+                height="47">
             </div>
-              <h1 class="slogan text-center maj">Watch TV Series & Movies Online for Free!</h1>
-              <div class="search-box d-flex justify-content-center mt-4">
-                <div class="search-wrap">
-                  <form class="d-flex align-items-center" autocomplete="off">
-                    <input type="text" class="search-input" id="searchInput" placeholder="Search TV Series & Movies...">
-                  </form>
-                  <div class="suggestions scaff head-popup items" id="search-results"></div>
+          </div>
+          <h1 class="slogan text-center maj">Watch TV Series & Movies Online for Free!</h1>
+          <div class="search-box d-flex justify-content-center mt-4">
+            <div class="search-wrap">
+              <form class="d-flex align-items-center" autocomplete="off">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search TV Series & Movies...">
+              </form>
+              <div class="suggestions scaff head-popup items" id="search-results"></div>
+            </div>
+          </div>
+          <div class="i-article">
+            <aside class="main">
+              <section class="mt-5">
+
+                <div id="history-section" style="display: none;">
+                  <div class="section-header" style="cursor: pointer;">
+                    <div class="section-title" onclick="toggleHistory()">Continue Watching</div>
+                    <div class="section-tabs">
+                      <div class="tab-pill" onclick="clearHistory(event)" style="background: #d32f2f; color: white;">
+                        Clear History</div>
+                    </div>
+                  </div>
+                  <div class="movies items" id="history-items"></div>
                 </div>
-              </div>
-            <div class="i-article">
-              <aside class="main">
-                <section class="mt-5">
-                  <div class="head">
-                    <div class="start">
-                      <h2 class="title"><i class="bi"></i>TRENDING</h2>
-                      <div class="tabs" data-id="recommended">
-                        <span class="tab active" onclick="toggleTab('buttmovies', 'buttshows', 'buttfavorites', 'movies', 'shows', 'favorites')" id="buttmovies">Movies</span>
-                        <span class="tab" onclick="toggleTab('buttshows', 'buttmovies', 'buttfavorites', 'shows', 'movies', 'favorites')" id="buttshows">TV Series</span>
-                        <span class="spt">|</span>
-                        <span class="tab" style="margin-left: auto;" onclick="toggleTab('buttfavorites', 'buttmovies', 'buttshows', 'favorites', 'movies', 'shows')" id="buttfavorites">Bookmark</span>
-                    </div>
+
+                <div id="favorites-section">
+                  <div class="section-header">
+                    <div class="section-title" onclick="toggleFavorites()">Your Library</div>
+                    <div class="section-tabs">
+                      <div class="tab-pill active" onclick="updateFavorites('all', this)">All</div>
+                      <div class="tab-pill" onclick="updateFavorites('movie', this)">Movies</div>
+                      <div class="tab-pill" onclick="updateFavorites('tv', this)">TV Shows</div>
                     </div>
                   </div>
-                  <div class="tab-content" id="movies">
-                    <div class="movies items" id="movie-items">
-                    </div>
+                  <div class="movies items" id="favorites-items"></div>
+                </div>
+
+                <div class="section-header">
+                  <div class="section-title">Trending Now</div>
+                  <div class="section-tabs">
+                    <div class="tab-pill active" onclick="updateTrending('movie', this)">Movies</div>
+                    <div class="tab-pill" onclick="updateTrending('tv', this)">TV Shows</div>
                   </div>
-                  <div class="tab-content" id="shows" style="display:none">
-                    <div class="movies items" id="tv-items">
-                    </div>
+                </div>
+                <div class="movies items" id="trending-items"></div>
+
+                <div class="section-header">
+                  <div class="section-title">Movies</div>
+                  <div class="section-tabs">
+                    <div class="tab-pill active" onclick="updateMovies('top_rated', this)">Top Rated</div>
+                    <div class="tab-pill" onclick="window.location.href='categories.html?type=movie'"
+                      style="background: rgba(255,255,255,0.1); color: #fff;"><i class="bi bi-grid-fill"
+                        style="margin-right: 5px;"></i>Categories</div>
                   </div>
-                  <div class="tab-content" id="favorites" style="display:none">
-                    <div class="movies items" id="favorites-items">
-                    </div>
+                </div>
+                <div class="movies items" id="movies-items"></div>
+
+                <div class="section-header">
+                  <div class="section-title">TV Series</div>
+                  <div class="section-tabs">
+                    <div class="tab-pill active" onclick="updateSeries('top_rated', this)">Top Rated</div>
+                    <div class="tab-pill" onclick="window.location.href='categories.html?type=tv'"
+                      style="background: rgba(255,255,255,0.1); color: #fff;"><i class="bi bi-grid-fill"
+                        style="margin-right: 5px;"></i>Categories</div>
                   </div>
-                </section>
-              </aside>
-            </div>
+                </div>
+                <div class="movies items" id="series-items"></div>
+
+              </section>
+            </aside>
           </div>
         </div>
-      </main>
-      <footer>
-        <div class="container">
-          <div class="body"></div>
-          <div class="abs">
-            <p style="margin-bottom: 5px">Kstream is top of free streaming website, where to watch TV Series & Movies online free without registration required.</p>
-            <p class="bottom-text">This site does not store any files on our server, we only linked to the media which is hosted on 3rd party services.</p>
-          </div>
+      </div>
+    </main>
+    <footer>
+      <div class="container">
+        <div class="body"></div>
+        <div class="abs">
+          <p style="margin-bottom: 5px">Kstream is top of free streaming website, where to watch TV Series & Movies
+            online free without registration required.</p>
+          <p class="bottom-text">This site does not store any files on our server, we only linked to the media which is
+            hosted on 3rd party services.</p>
         </div>
-      </footer>
-    </div>
-  </body>
-  <script type='text/javascript' src='./home.js' async='async'></script>
+      </div>
+    </footer>
+  </div>
+</body>
+<script src='./utils.js'></script>
+<script src='./home.js'></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        })
+        .catch(err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+  }
+</script>
+
 </html>
