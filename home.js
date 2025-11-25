@@ -15,20 +15,20 @@ const ELEMENTS = {
     favoritesItems: document.getElementById("favorites-items"),
     historyItems: document.getElementById("history-items"),
     historySection: document.getElementById("history-section"),
-    searchWrap: document.querySelector(".search-wrap")
+    searchWrap: document.querySelector(".search-wrap") 
 };
 
 async function fetchTMDB(endpoint, params = {}) {
     const url = new URL(`${CONFIG.BASE_URL}${endpoint}`);
     url.searchParams.append("api_key", CONFIG.API_KEY);
     url.searchParams.append("language", "en-US");
-
+    
     for (const [key, value] of Object.entries(params)) {
         url.searchParams.append(key, value);
     }
 
     const headers = { Authorization: `Bearer ${CONFIG.BEARER_TOKEN}` };
-
+    
     try {
         const response = await fetch(url, { method: "GET", headers });
         if (!response.ok) throw new Error(`API Error: ${response.status}`);
@@ -72,23 +72,23 @@ function createMediaCard(item, type = 'movie') {
     const title = item.title || item.name;
     const date = item.release_date || item.first_air_date || "N/A";
     const year = date.split("-")[0];
-    const mediaType = item.media_type || type;
+    const mediaType = item.media_type || type; 
 
     const posterDiv = document.createElement("div");
     posterDiv.classList.add("poster");
     const posterLink = document.createElement("div");
     const posterImg = document.createElement("img");
     posterImg.draggable = false;
-    posterImg.src = item.poster_path
-        ? `${CONFIG.IMAGE_URL}${item.poster_path}`
+    posterImg.src = item.poster_path 
+        ? `${CONFIG.IMAGE_URL}${item.poster_path}` 
         : `${CONFIG.DOMAIN}/img/empty.png`;
     posterImg.alt = title;
     posterImg.loading = "lazy";
-
+    
     posterImg.style.opacity = "0";
     posterImg.style.transition = "opacity 0.3s";
     posterImg.onload = () => posterImg.style.opacity = "1";
-
+    
     posterLink.appendChild(posterImg);
     posterDiv.appendChild(posterLink);
 
@@ -111,19 +111,19 @@ function createMediaCard(item, type = 'movie') {
 ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
     const searchTerm = event.target.value.trim();
     ELEMENTS.searchResults.innerHTML = "";
-
+    
     if (searchTerm.length > 0) {
         searchLoader.style.display = "block";
         ELEMENTS.searchResults.style.display = "inline";
-
+        
         const data = await fetchTMDB("/search/multi", { query: searchTerm });
         searchLoader.style.display = "none";
-
+        
         if (data && data.results && data.results.length > 0) {
             const fragment = document.createDocumentFragment();
-
+            
             const validResults = data.results.filter(item => item.poster_path).slice(0, 5);
-
+            
             validResults.forEach((item) => {
                 const mediaItem = document.createElement("div");
                 mediaItem.className = "item";
@@ -135,12 +135,12 @@ ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
 
                 const info = document.createElement("div");
                 info.className = "info";
-
+                
                 const titleLink = document.createElement("a");
                 titleLink.className = "name";
                 titleLink.textContent = item.title || item.name;
-                titleLink.href = "#";
-
+                titleLink.href = "#"; 
+                
                 const meta = document.createElement("span");
                 meta.className = "meta";
                 const type = item.media_type === "movie" ? "Movie" : "TV";
@@ -160,7 +160,7 @@ ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
 
                 fragment.appendChild(mediaItem);
             });
-
+            
             ELEMENTS.searchResults.appendChild(fragment);
         } else {
             const noResults = document.createElement("div");
@@ -176,21 +176,21 @@ ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
 
 function debounce(func, wait) {
     let timeout;
-    return function (...args) {
+    return function(...args) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
 }
 
-window.updateTrending = async function (type, tab) {
+window.updateTrending = async function(type, tab) {
     if (tab) handleTabActive(tab);
-
+    
     const container = ELEMENTS.trendingItems;
     showSkeletons(container);
-
+    
     let endpoint = type === 'movie' ? '/trending/movie/week' : '/trending/tv/week';
     const data = await fetchTMDB(endpoint);
-
+    
     container.innerHTML = "";
     if (data && data.results) {
         const fragment = document.createDocumentFragment();
@@ -208,23 +208,23 @@ window.updateTrending = async function (type, tab) {
     }
 };
 
-window.updateMovies = async function (category, tab) {
-    if (tab && tab.classList.contains('active')) return;
+window.updateMovies = async function(category, tab) {
+    if (tab && tab.classList.contains('active')) return; 
     if (tab) handleTabActive(tab);
-
+    
     const container = ELEMENTS.moviesItems;
     showSkeletons(container);
-
+    
     let endpoint = '';
     let params = {};
-
+    
     if (category === 'top_rated') endpoint = '/movie/top_rated';
     else if (category === 'upcoming') endpoint = '/movie/upcoming';
     else {
         endpoint = '/discover/movie';
-        const genres = {
-            'action': '28',
-            'comedy': '35',
+        const genres = { 
+            'action': '28', 
+            'comedy': '35', 
             'horror': '27',
             'animation': '16',
             'documentary': '99',
@@ -236,16 +236,16 @@ window.updateMovies = async function (category, tab) {
         };
         if (genres[category]) params = { with_genres: genres[category] };
     }
-
+    
     const data = await fetchTMDB(endpoint, params);
     container.innerHTML = "";
-
+    
     if (data && data.results) {
         const fragment = document.createDocumentFragment();
         data.results.slice(0, 20).forEach(item => {
             fragment.appendChild(createMediaCard(item, 'movie'));
         });
-
+        
         const viewAllBtn = createViewAllButton('movie', category);
         fragment.appendChild(viewAllBtn);
 
@@ -254,23 +254,23 @@ window.updateMovies = async function (category, tab) {
     }
 };
 
-window.updateSeries = async function (category, tab) {
-    if (tab && tab.classList.contains('active')) return;
+window.updateSeries = async function(category, tab) {
+    if (tab && tab.classList.contains('active')) return; 
     if (tab) handleTabActive(tab);
-
+    
     const container = ELEMENTS.seriesItems;
     showSkeletons(container);
-
+    
     let endpoint = '';
     let params = {};
-
+    
     if (category === 'top_rated') endpoint = '/tv/top_rated';
     else if (category === 'on_the_air') endpoint = '/tv/on_the_air';
     else {
         endpoint = '/discover/tv';
-        const genres = {
-            'action': '10759',
-            'comedy': '35',
+        const genres = { 
+            'action': '10759', 
+            'comedy': '35', 
             'drama': '18',
             'scifi': '10765',
             'animation': '16',
@@ -281,10 +281,10 @@ window.updateSeries = async function (category, tab) {
         };
         if (genres[category]) params = { with_genres: genres[category] };
     }
-
+    
     const data = await fetchTMDB(endpoint, params);
     container.innerHTML = "";
-
+    
     if (data && data.results) {
         const fragment = document.createDocumentFragment();
         data.results.slice(0, 20).forEach(item => {
@@ -322,12 +322,12 @@ function handleTabActive(tab) {
     tab.classList.add('active');
 }
 
-window.toggleHistory = function () {
+window.toggleHistory = function() {
     const section = document.getElementById('history-section');
     section.classList.toggle('open');
 };
 
-window.clearHistory = function (event) {
+window.clearHistory = function(event) {
     if (event) event.stopPropagation();
     if (confirm("Are you sure you want to clear your watch history?")) {
         localStorage.removeItem('watchHistory');
@@ -337,23 +337,23 @@ window.clearHistory = function (event) {
 
 function updateHistory() {
     const history = JSON.parse(localStorage.getItem('watchHistory')) || [];
-
+    
     if (history.length === 0) {
         ELEMENTS.historySection.style.display = 'none';
         return;
     }
 
     ELEMENTS.historySection.style.display = 'block';
-
+    
     ELEMENTS.historyItems.innerHTML = "";
     const fragment = document.createDocumentFragment();
 
     history.forEach(item => {
         const card = createMediaCard(item, item.media);
-
+        
         card.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault(); 
+            e.stopPropagation(); 
             let url = `player.html?media=${item.media}&id=${item.id}`;
             if (item.media === 'tv' && item.season && item.episode) {
                 url += `&season=${item.season}&episode=${item.episode}`;
@@ -390,22 +390,22 @@ function formatTime(seconds) {
     return `${m}min`;
 }
 
-window.toggleFavorites = function () {
+window.toggleFavorites = function() {
     const section = document.getElementById('favorites-section');
     section.classList.toggle('open');
 };
 
-window.updateFavorites = async function (filter = 'all', tab = null) {
+window.updateFavorites = async function(filter = 'all', tab = null) {
     if (tab) {
-        event && event.stopPropagation();
+        event && event.stopPropagation(); 
         handleTabActive(tab);
     }
 
     const favoritesData = localStorage.getItem('favorites');
     const favorites = favoritesData ? JSON.parse(favoritesData) : [];
-
-    const filteredFavorites = filter === 'all'
-        ? favorites
+    
+    const filteredFavorites = filter === 'all' 
+        ? favorites 
         : favorites.filter(item => item.media === filter);
 
     const container = ELEMENTS.favoritesItems;
@@ -419,25 +419,25 @@ window.updateFavorites = async function (filter = 'all', tab = null) {
     showSkeletons(container, filteredFavorites.length);
 
     const fragment = document.createDocumentFragment();
-
-    const promises = filteredFavorites.map(favorite =>
+    
+    const promises = filteredFavorites.map(favorite => 
         fetchTMDB(`/${favorite.media}/${favorite.id}`, { append_to_response: "credits" })
             .then(data => data ? createMediaCard(data, favorite.media) : null)
     );
 
     const results = await Promise.all(promises);
-    container.innerHTML = "";
-
+    container.innerHTML = ""; 
+    
     results.forEach(card => {
         if (card) fragment.appendChild(card);
     });
-
+    
     container.appendChild(fragment);
-    enableDragScroll(container);
+    enableDragScroll(container); 
 };
 
 function enableDragScroll(container) {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return; 
 
     let isDown = false;
     let startX;
@@ -454,7 +454,7 @@ function enableDragScroll(container) {
 
     container.addEventListener('mouseleave', () => {
         isDown = false;
-        container.style.cursor = 'grab';
+        container.style.cursor = 'grab'; 
     });
 
     container.addEventListener('mouseup', () => {
@@ -477,7 +477,7 @@ function enableDragScroll(container) {
         if (Math.abs(walk) > 5) isDragging = true;
         container.scrollLeft = scrollLeft - walk;
     });
-
+    
     container.style.cursor = 'grab';
 }
 

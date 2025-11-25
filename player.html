@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="content-type" content="text/html;charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"">
-    <meta name=" author" content="Kstream">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name=" author" content="Kstream">
   <meta name="keywords"
     content="Kstream, Kstream.net, movies online for free, streaming tv, online for free, tv series, movies online, tv shows, streaming online, streaming free without account, stream movies online free, free online movie streaming sites, watch tv online free streaming, free tv shows online streaming full episodes, free movies, movies to watch, free movies online, watch movies free, free movies website free">
   <title>Kstream Player | Watch TV Series & Movies Online for Free!</title>
@@ -48,16 +48,12 @@
         </div>
       </header>
 
-
-
       <main>
         <div class="watch">
           <div id="reader-wrapper" class="no-reader">
             <div id="reader-bg" class="reader-bg"></div>
             <div class="container watch-page">
-
-              <!-- Server Select Centered & Outside -->
-              <div class="server-select-wrapper" style="text-align: center; margin-bottom: 20px;">
+              <div class="reader-main">
                 <select class="servers" id="selected" onchange="servers(this.value)">
                   <option value="S1">VidKing</option>
                   <option value="S2">Vidsrc.to</option>
@@ -65,9 +61,6 @@
                   <option value="S4">Multi</option>
                   <option value="S5">Frembed</option>
                 </select>
-              </div>
-
-              <div class="reader-main">
                 <iframe id="reader" class="reader" width="100%" height="100%" allowfullscreen></iframe>
               </div>
               <section id="controls">
@@ -77,122 +70,120 @@
                       <div class="bi bi-arrow-clockwise" id="refresh"></div>
                       <label for="seasonSelect"></label>
                       <select id="seasonSelect"></select>
-                      <label for="episodeSelect"></label>
+                      <label style="margin-left: 1rem;" for="episodeSelect"></label>
                       <select id="episodeSelect"></select>
                       <div class="bi bi-skip-end-circle" id="next"></div>
                       <div class="bi bi-skip-forward-circle" id="last"></div>
                     </div>
                   </div>
                 </div>
+              </section>
             </div>
-            </section>
           </div>
         </div>
-    </div>
-    <div class="container watch-page">
-      <div class="aside-wrapper info-ep">
-        <aside class="main">
-          <section id="w-info">
-            <div class="poster">
-              <img id="image" src="">
-            </div>
-            <div class="info">
-              <div class="info-header">
-                <div>
-                  <h1 id="name" class="name"></h1>
-                  <div id="tagline" class="tagline" style="font-style: italic; color: #a0a0a0; margin-bottom: 10px;">
+        <div class="container watch-page">
+          <div class="aside-wrapper info-ep">
+            <aside class="main">
+              <section id="w-info">
+                <div class="poster">
+                  <img id="image" src="">
+                </div>
+                <div class="info">
+                  <div class="info-header">
+                    <div>
+                      <h1 id="name" class="name"></h1>
+                      <div id="tagline" class="tagline" style="font-style: italic; color: #a0a0a0; margin-bottom: 10px;">
+                      </div>
+                    </div>
+                    <div class="buttons">
+                      <i class="bi bi-bookmark" id="bookmark" title="Bookmark"></i>
+                      <i class="bi bi-box-arrow-up" onclick="generateAndCopyLink()" title="Share"></i>
+                    </div>
+                  </div>
+                  <div class="meta">
+                    <span id="type" class="rating"></span>
+                    <span id="grade" class="bi bi-star-fill"></span>
+                    <span id="released" class="year"></span>
+                    <span id="duration" class="duration"></span>
+                  </div>
+                  <div id="description" class="description cts-wrapper"></div>
+                  <div class="detail">
+                    <div style="display:none">
+                      <div>Id:</div>
+                      <span id="mid"></span>
+                    </div>
+                    <div>
+                      <div>Type:</div>
+                      <span id="mediatype"></span>
+                    </div>
+                    <div>
+                      <div>Country:</div>
+                      <span id="country"></span>
+                    </div>
+                    <div>
+                      <div>Genre:</div>
+                      <span id="genres"></span>
+                    </div>
+                    <div>
+                      <div>Status:</div>
+                      <span id="status"></span>
+                    </div>
+                    <div>
+                      <div>Network:</div>
+                      <span id="networks"></span>
+                    </div>
+                    <div>
+                      <div>Release:</div>
+                      <span id="release-date"></span>
+                    </div>
+                    <div>
+                      <div id="boom">Director:</div>
+                      <span id="director"></span>
+                    </div>
+                    <div>
+                      <div>Production:</div>
+                      <span id="production"></span>
+                    </div>
+                    <div>
+                      <div>Cast:</div>
+                      <span id="cast"></span>
+                    </div>
                   </div>
                 </div>
-                <div class="buttons">
-                  <i class="bi bi-bookmark" id="bookmark" title="Bookmark"></i>
-                  <i class="bi bi-box-arrow-up" onclick="generateAndCopyLink()" title="Share"></i>
-                </div>
-              </div>
-              <div class="meta">
-                <span id="type" class="rating"></span>
-                <span id="grade" class="bi bi-star-fill"></span>
-                <span id="released" class="year"></span>
-                <span id="duration" class="duration"></span>
-              </div>
-              <div id="description" class="description cts-wrapper"></div>
-              <div class="detail">
-                <div style="display:none">
-                  <div>Id:</div>
-                  <span id="mid"></span>
-                </div>
-                <div>
-                  <div>Type:</div>
-                  <span id="mediatype"></span>
-                </div>
-                <div>
-                  <div>Country:</div>
-                  <span id="country"></span>
-                </div>
-                <div>
-                  <div>Genre:</div>
-                  <span id="genres"></span>
-                </div>
-                <div>
-                  <div>Status:</div>
-                  <span id="status"></span>
-                </div>
-                <div>
-                  <div>Network:</div>
-                  <span id="networks"></span>
-                </div>
-                <div>
-                  <div>Release:</div>
-                  <span id="release-date"></span>
-                </div>
-                <div>
-                  <div id="boom">Director:</div>
-                  <span id="director"></span>
-                </div>
-                <div>
-                  <div>Production:</div>
-                  <span id="production"></span>
-                </div>
-                <div>
-                  <div>Cast:</div>
-                  <span id="cast"></span>
-                </div>
-              </div>
-            </div>
-          </section>
+              </section>
 
-                    <!-- COLLECTIONS SECTION -->
-                    <section id="collection-section" style="margin-top: 3rem; display: none;">
-                      <div class="section-header">
-                        <div class="section-title" id="collection-title">Collection</div>
-                      </div>
-                      <div class="movies items" id="collection-items"></div>
-                    </section>
+              <!-- COLLECTIONS SECTION -->
+              <section id="collection-section" style="margin-top: 3rem; display: none;">
+                <div class="section-header">
+                  <div class="section-title" id="collection-title">Collection</div>
+                </div>
+                <div class="movies items" id="collection-items"></div>
+              </section>
 
-                    <!-- RECOMMENDATIONS SECTION -->
-          <section id="recommendations" style="margin-top: 3rem; display: none;">
-            <div class="section-header">
-              <div class="section-title">You May Also Like</div>
-            </div>
-            <div class="movies items" id="recommendations-items"></div>
-          </section>
-        </aside>
-      </div>
+              <!-- RECOMMENDATIONS SECTION -->
+              <section id="recommendations" style="margin-top: 3rem; display: none;">
+                <div class="section-header">
+                  <div class="section-title">You May Also Like</div>
+                </div>
+                <div class="movies items" id="recommendations-items"></div>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </main>
+      <div class="empty"></div>
+      <footer>
+        <div class="container">
+          <div class="body"></div>
+          <div class="abs">
+            <p style="margin-bottom: 5px">Kstream is top of free streaming website, where to watch TV Series & Movies online
+              free without registration required.</p>
+            <p class="bottom-text">This site does not store any files on our server, we only linked to the media which is
+              hosted on 3rd party services.</p>
+          </div>
+        </div>
+      </footer>
     </div>
-  </div>
-  </main>
-  <div class="empty"></div>
-  <footer>
-    <div class="container">
-      <div class="body"></div>
-      <div class="abs">
-        <p style="margin-bottom: 5px">Kstream is top of free streaming website, where to watch TV Series & Movies online
-          free without registration required.</p>
-        <p class="bottom-text">This site does not store any files on our server, we only linked to the media which is
-          hosted on 3rd party services.</p>
-      </div>
-    </div>
-  </footer>
-  </div>
   </div>
   <script src='./utils.js'></script>
   <script src='./player.js'></script>
@@ -209,8 +200,6 @@
       });
     }
   </script>
-
-</html>
 </body>
 
 </html>
