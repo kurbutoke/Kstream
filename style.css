@@ -48,7 +48,7 @@ a:hover { color: var(--primary-color); }
 
 .wrapper { flex: 1; display: flex; flex-direction: column; }
 .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; position: relative; } 
-.container.sm { max-width: 900px; }
+.container.sm { max-width: 1200px; }
 
 .i-head { padding: 0.5rem 0; text-align: center; }
 .logo img { height: 40px; transition: var(--transition); filter: drop-shadow(0 0 10px rgba(0,172,193,0.2)); }
@@ -63,6 +63,7 @@ a:hover { color: var(--primary-color); }
     text-transform: uppercase;
     letter-spacing: 1px;
     background: linear-gradient(45deg, #fff, #a0a0a0);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -280,6 +281,10 @@ a:hover { color: var(--primary-color); }
     /* Smart Padding to align first item with container text */
     padding-left: max(20px, calc((100vw - 1400px) / 2 + 20px)); /* 1400px is container max-width */
     padding-right: 20px;
+
+    /* Scroll Snap */
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: max(20px, calc((100vw - 1400px) / 2 + 20px));
 }
 
 @media (max-width: 1440px) {
@@ -313,6 +318,7 @@ a:hover { color: var(--primary-color); }
     min-width: 200px;
     width: 200px;
     flex-shrink: 0;
+    scroll-snap-align: start;
 }
 
 .item:hover { z-index: 10; }
@@ -498,6 +504,7 @@ a:hover { color: var(--primary-color); }
     .movies.items {
         padding-left: 20px;
         padding-right: 20px;
+        scroll-padding-left: 20px;
         /* Ensure full width on mobile too */
         width: 100vw;
         margin-left: calc(-50vw + 50%);
