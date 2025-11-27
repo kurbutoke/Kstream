@@ -163,7 +163,11 @@ async function load(mediaType, itemId, seasonParam = null, episodeParam = null) 
     UI.reader.style.display = "block";
     
     if (mediaType === "movie") {
-        servers("S1");
+        let savedServer = "S1";
+        try {
+            savedServer = localStorage.getItem('lastServer') || "S1";
+        } catch(e) {}
+        servers(savedServer);
     } else {
         await handleTVShowLogic(data, itemId, seasonParam, episodeParam);
     }
@@ -359,7 +363,11 @@ async function handleTVShowLogic(data, itemId, seasonParam, episodeParam) {
             UI.episodeSelect.value = episodeParam;
         }
 
-        servers("S1");
+        let savedServer = "S1";
+        try {
+            savedServer = localStorage.getItem('lastServer') || "S1";
+        } catch(e) {}
+        servers(savedServer);
     }
 }
 
@@ -401,8 +409,8 @@ function servers(serverID) {
         if (media === "movie") {
             const movieMap = {
                 "S1": `https://vidking.net/embed/movie/${id}?autoplay=1`,
-                "S2": `https://vidsrc.to/embed/movie/${id}`,
-                "S3": `https://vidsrc.me/embed/movie?tmdb=${id}&color=00acc1`,
+                "S2": `https://player.videasy.net/movie/${id}`,
+                "S3": `https://vidsrc.to/embed/movie/${id}`,
                 "S4": `https://multiembed.mov/?video_id=${id}&tmdb=1`,
                 "S5": `https://frembed.ink/api/film.php?id=${id}`
             };
@@ -412,8 +420,8 @@ function servers(serverID) {
             const e = UI.episodeSelect.value || 1;
             const tvMap = {
                 "S1": `https://vidking.net/embed/tv/${id}/${s}/${e}?autoplay=1`,
-                "S2": `https://vidsrc.to/embed/tv/${id}/${s}/${e}`,
-                "S3": `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}&color=00acc1`,
+                "S2": `https://player.videasy.net/tv/${id}/${s}/${e}`,
+                "S3": `https://vidsrc.to/embed/tv/${id}/${s}/${e}`,
                 "S4": `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`,
                 "S5": `https://frembed.ink/api/serie.php?id=${id}&sa=${s}&epi=${e}`
             };
@@ -425,7 +433,22 @@ function servers(serverID) {
     if (url) {
         UI.reader.src = url;
         UI.selected.setAttribute("used", serverID);
+        
+        // Robust UI update: ensure the dropdown matches the active server
+        // We check if the option exists before setting it to avoid errors or mismatches
+        const optionExists = [...UI.selected.options].some(o => o.value === serverID);
+        if (UI.selected && optionExists) {
+            UI.selected.value = serverID;
+        }
+        
         UI.reader.style.display = "block";
+
+        // Save preference
+        try {
+            localStorage.setItem('lastServer', serverID);
+        } catch (e) {
+            console.warn('LocalStorage save failed', e);
+        }
 
         saveToHistory();
     }
@@ -465,28 +488,57 @@ function saveToHistory(progressData = null) {
 
 window.addEventListener("message", function (event) {
     try {
-        if (typeof event.data !== "string") return;
+        let msg = event.data;
 
-        const msg = JSON.parse(event.data);
-
-        if (msg && msg.type === "PLAYER_EVENT" && msg.data) {
-            const data = msg.data;
-
-            if (data.event === "timeupdate" || data.event === "pause") {
-                const now = Date.now();
-                if (!window.lastHistorySave || (now - window.lastHistorySave > 5000) || data.event === "pause") {
-                    saveToHistory({
-                        progress: data.progress,
-                        currentTime: data.currentTime,
-                        duration: data.duration
-                    });
-                    window.lastHistorySave = now;
-                }
+        // Parse if string
+        if (typeof msg === "string") {
+            try {
+                msg = JSON.parse(msg);
+            } catch (e) {
+                return; // Not JSON
             }
         }
+
+        if (typeof msg !== "object" || !msg) return;
+
+        // 1. Vidking / Generic PLAYER_EVENT format
+        if (msg.type === "PLAYER_EVENT" && msg.data) {
+            const data = msg.data;
+            if (data.event === "timeupdate" || data.event === "pause") {
+                saveProgress(data.progress, data.currentTime, data.duration, data.event);
+            }
+        }
+        // 2. Videasy / Generic Object format (detect by properties)
+        // Videasy often sends: { event: "timeupdate", time: 123, duration: 456 } or similar
+        else if (msg.event === "timeupdate" || msg.event === "pause" || msg.type === "timeupdate") {
+             const currentTime = msg.currentTime || msg.time || (msg.data ? msg.data.currentTime : 0);
+             const duration = msg.duration || (msg.data ? msg.data.duration : 0);
+             let progress = msg.progress || (msg.data ? msg.data.progress : 0);
+             
+             if (!progress && duration > 0 && currentTime > 0) {
+                 progress = (currentTime / duration) * 100;
+             }
+
+             if (currentTime && duration) {
+                 saveProgress(progress, currentTime, duration, msg.event || msg.type);
+             }
+        }
     } catch (e) {
+        console.error("Error handling message:", e);
     }
 });
+
+function saveProgress(progress, currentTime, duration, eventType) {
+    const now = Date.now();
+    if (!window.lastHistorySave || (now - window.lastHistorySave > 5000) || eventType === "pause") {
+        saveToHistory({
+            progress: progress,
+            currentTime: currentTime,
+            duration: duration
+        });
+        window.lastHistorySave = now;
+    }
+}
 
 UI.seasonSelect.addEventListener("change", async () => {
     const seriesId = UI.mid.textContent;
