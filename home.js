@@ -392,10 +392,6 @@ function updateHistory() {
             window.location.href = url;
         };
 
-        if (item.media === 'tv' && item.infoStr) {
-            // Info is now in the tooltip, removed from title display
-        }
-        
         // Remove the old text time display for movies if we have a bar, or keep it? 
         // The prompt says "barre de progression", usually replaces text or complements it.
         // I'll remove the specific text modification for movie time to clean it up, 

@@ -272,23 +272,19 @@ a:hover { color: var(--primary-color); }
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     counter-reset: rank;
-    
-    /* Scroll Snap for all devices */
     scroll-snap-type: x mandatory;
-    
-    /* Full Viewport Width Carousel */
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
-    
-    /* Smart Padding to align first item with container text */
-    padding-left: max(20px, calc((100vw - 1400px) / 2 + 20px)); /* 1400px is container max-width */
+    padding-left: max(20px, calc((100vw - 1400px) / 2 + 20px));
     padding-right: 20px;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: max(20px, calc((100vw - 1400px) / 2 + 20px));
 }
 
 @media (max-width: 1440px) {
     .movies.items {
-        padding-left: 20px; /* Fallback alignment for smaller screens */
+        padding-left: 20px;
     }
 }
 
@@ -311,11 +307,9 @@ a:hover { color: var(--primary-color); }
 .movies.items::-webkit-scrollbar-track { background: transparent; }
 .movies.items::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-/* Fix Z-Index Stacking for Hover */
 .movies.items {
-    /* Ensure items can overlap when scaled */
     overflow-y: visible;
-    padding-top: 20px; /* Space for scale effect */
+    padding-top: 20px;
 }
 
 .item {
@@ -325,23 +319,20 @@ a:hover { color: var(--primary-color); }
     width: 200px;
     flex-shrink: 0;
     scroll-snap-align: start;
-    z-index: 1; /* Default base level */
+    z-index: 1;
 }
 
-/* Ensure hovered item is always on top */
 .item:hover { 
     z-index: 100; 
 }
 
-/* Specifically for tooltip visibility */
 .item:hover .poster[data-progress-tooltip]::after {
-    z-index: 101; /* Above the card itself */
+    z-index: 101;
 }
 
 .item .poster {
     position: relative;
     border-radius: var(--radius-md);
-    /* overflow: hidden; Removed to allow tooltip to overflow */
     aspect-ratio: 2/3;
     box-shadow: var(--shadow-soft);
     transition: var(--transition);
@@ -353,7 +344,7 @@ a:hover { color: var(--primary-color); }
     height: 100%; 
     object-fit: cover; 
     display: block; 
-    border-radius: var(--radius-md); /* Added border-radius to image directly */
+    border-radius: var(--radius-md);
 }
 
 .item:hover .poster {
@@ -390,10 +381,10 @@ a:hover { color: var(--primary-color); }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem; /* Reduced from 1.5rem */
-    margin-top: 1.5rem; /* Reduced from 2.5rem */
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
     border-bottom: 1px solid rgba(255,255,255,0.05);
-    padding-bottom: 5px; /* Reduced from 10px */
+    padding-bottom: 5px;
 }
 
 .section-title {
@@ -462,7 +453,7 @@ a:hover { color: var(--primary-color); }
     max-height: 500px;
     opacity: 1;
     overflow-x: auto;
-    padding-bottom: 10px; /* Reduced from 20px */
+    padding-bottom: 10px;
 }
 
 #favorites-section .section-title,
@@ -547,10 +538,10 @@ a:hover { color: var(--primary-color); }
         justify-content: flex-start;
         margin-left: auto;
         min-width: 0;
-        scrollbar-width: none; /* Firefox */
+        scrollbar-width: none;
     }
     
-    .section-tabs::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+    .section-tabs::-webkit-scrollbar { display: none; }
 
     .tab-pill {
         white-space: nowrap;
@@ -805,7 +796,6 @@ footer .abs .bottom-text { color: #444; font-size: 0.8rem; margin-top: 5px; }
         width: 170px;
     }
 
-    /* Stack player info earlier for tablets/small laptops */
     #w-info { 
         flex-direction: column; 
         align-items: center; 
@@ -834,7 +824,6 @@ footer .abs .bottom-text { color: #444; font-size: 0.8rem; margin-top: 5px; }
         margin-right: calc(-50vw + 50%);
         transform: none;
         overflow-x: auto;
-        /* Allow overflow-y for hover effects if needed, though touch scrolling handles differently */
         overflow-y: visible; 
         scroll-snap-type: x mandatory;
         scroll-padding-left: 20px;
@@ -929,7 +918,6 @@ footer .abs .bottom-text { color: #444; font-size: 0.8rem; margin-top: 5px; }
     color: #fff;
 }
 
-/* Progress Bar Styles */
 .progress-container {
     position: absolute;
     bottom: 0;
@@ -940,7 +928,7 @@ footer .abs .bottom-text { color: #444; font-size: 0.8rem; margin-top: 5px; }
     z-index: 5;
     border-bottom-left-radius: var(--radius-md);
     border-bottom-right-radius: var(--radius-md);
-    overflow: hidden; /* Keep bar inside container */
+    overflow: hidden;
 }
 
 .progress-bar {
@@ -950,7 +938,6 @@ footer .abs .bottom-text { color: #444; font-size: 0.8rem; margin-top: 5px; }
     box-shadow: 0 0 5px rgba(0, 172, 193, 0.5);
 }
 
-/* Tooltip for Progress */
 .item .poster::after {
     content: attr(data-progress-tooltip);
     position: absolute;
@@ -978,7 +965,6 @@ footer .abs .bottom-text { color: #444; font-size: 0.8rem; margin-top: 5px; }
     transform: translateX(-50%) translateY(0);
 }
 
-/* Actor Cards */
 .actor-card {
     display: flex;
     flex-direction: column;

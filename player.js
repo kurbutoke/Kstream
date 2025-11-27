@@ -151,7 +151,6 @@ async function load(mediaType, itemId, seasonParam = null, episodeParam = null) 
     }
     fillOrHide("director", directorName);
 
-    // --- COLLECTION LOGIC ---
     if (data.belongs_to_collection) {
         renderCollection(data.belongs_to_collection.id);
     } else {

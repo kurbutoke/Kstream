@@ -59,7 +59,33 @@ async function loadPerson(personId) {
     
     UI.name.textContent = details.name;
     UI.department.textContent = details.known_for_department;
-    UI.biography.textContent = details.biography || "No biography available.";
+    
+    const bioText = details.biography || "No biography available.";
+    const maxChars = 500; // Maximum characters to show initially
+
+    if (bioText.length > maxChars) {
+        const truncatedText = bioText.slice(0, maxChars) + "...";
+        
+        UI.biography.innerHTML = `
+            <span class="bio-text">${truncatedText}</span>
+            <span class="read-more-btn" style="color: var(--primary-color); cursor: pointer; margin-left: 5px; font-weight: bold;">Read More</span>
+        `;
+        
+        const readMoreBtn = UI.biography.querySelector('.read-more-btn');
+        const bioSpan = UI.biography.querySelector('.bio-text');
+        
+        readMoreBtn.onclick = () => {
+            if (readMoreBtn.textContent === "Read More") {
+                bioSpan.textContent = bioText;
+                readMoreBtn.textContent = "Read Less";
+            } else {
+                bioSpan.textContent = truncatedText;
+                readMoreBtn.textContent = "Read More";
+            }
+        };
+    } else {
+        UI.biography.textContent = bioText;
+    }
     
     if (details.birthday) {
         const date = new Date(details.birthday);
