@@ -354,30 +354,30 @@ function updateHistory() {
         // Add Progress Bar
         if (item.currentTime && item.duration) {
             const percent = Math.min(100, Math.max(0, (item.currentTime / item.duration) * 100));
-            
+
             const progressContainer = document.createElement("div");
             progressContainer.className = "progress-container";
-            
+
             const progressBar = document.createElement("div");
             progressBar.className = "progress-bar";
             progressBar.style.width = `${percent}%`;
-            
+
             progressContainer.appendChild(progressBar);
-            
+
             // Append to poster (first child of card)
             const posterDiv = card.querySelector('.poster');
             if (posterDiv) {
                 posterDiv.appendChild(progressContainer);
-                
+
                 // Add tooltip for hover duration
                 const consumedTime = formatTime(item.currentTime);
                 const totalTime = formatTime(item.duration);
                 let tooltipText = `${consumedTime} / ${totalTime}`;
-                
+
                 if (item.media && item.media.toLowerCase() === 'tv' && item.infoStr) {
                     tooltipText = `${item.infoStr} • ${tooltipText}`;
                 }
-                
+
                 posterDiv.setAttribute('data-progress-tooltip', tooltipText);
             }
         }
@@ -397,7 +397,7 @@ function updateHistory() {
         // I'll remove the specific text modification for movie time to clean it up, 
         // or just keep the meta info cleaner.
         // Let's keep the extra info like S1:E1 but maybe not the exact minutes text if we have the bar.
-        
+
         fragment.appendChild(card);
     });
 
@@ -405,15 +405,15 @@ function updateHistory() {
     enableDragScroll(ELEMENTS.historyItems);
 }
 
-window.updateActors = async function() {
+window.updateActors = async function () {
     const container = document.getElementById("actors-items");
     if (!container) return;
-    
+
     showSkeletons(container);
-    
+
     const data = await fetchTMDB('/person/popular');
     container.innerHTML = "";
-    
+
     if (data && data.results) {
         const fragment = document.createDocumentFragment();
         data.results.slice(0, 15).forEach(person => {
@@ -427,24 +427,24 @@ window.updateActors = async function() {
 function createActorCard(person) {
     const div = document.createElement('div');
     div.className = 'item actor-card';
-    
+
     const img = document.createElement('img');
-    img.src = person.profile_path 
+    img.src = person.profile_path
         ? `${CONFIG.IMAGE_URL}${person.profile_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     img.className = 'actor-img';
-    
+
     const name = document.createElement('span');
     name.className = 'actor-name';
     name.textContent = person.name;
-    
+
     div.appendChild(img);
     div.appendChild(name);
-    
+
     div.onclick = () => {
         window.location.href = `person.html?id=${person.id}`;
     };
-    
+
     return div;
 }
 

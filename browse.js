@@ -21,13 +21,13 @@ async function fetchTMDB(endpoint, params = {}) {
     const url = new URL(`${CONFIG.BASE_URL}${endpoint}`);
     url.searchParams.append("api_key", CONFIG.API_KEY);
     url.searchParams.append("language", "en-US");
-    
+
     for (const [key, value] of Object.entries(params)) {
         url.searchParams.append(key, value);
     }
 
     const headers = { Authorization: `Bearer ${CONFIG.BEARER_TOKEN}` };
-    
+
     try {
         const response = await fetch(url, { method: "GET", headers });
         if (!response.ok) throw new Error(`API Error: ${response.status}`);
@@ -45,7 +45,7 @@ function getURLParameters() {
 
     const typeTitle = currentType === 'movie' ? 'Movies' : 'TV Series';
     let categoryTitle = currentCategory.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    
+
     UI.title.textContent = `${categoryTitle} ${typeTitle}`;
     document.title = `${UI.title.textContent} - Kstream`;
 
@@ -70,20 +70,20 @@ async function loadContent() {
         endpoint = '/tv/on_the_air';
     } else {
         if (!isNaN(currentCategory)) {
-             endpoint = `/discover/${currentType}`;
-             params.with_genres = currentCategory;
-             
-             const urlParams = new URLSearchParams(window.location.search);
-             const titleParam = urlParams.get('title');
-             if (titleParam) {
-                 UI.title.textContent = `${decodeURIComponent(titleParam)} ${currentType === 'movie' ? 'Movies' : 'TV Series'}`;
-                 document.title = `${UI.title.textContent} - Kstream`;
-             }
+            endpoint = `/discover/${currentType}`;
+            params.with_genres = currentCategory;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const titleParam = urlParams.get('title');
+            if (titleParam) {
+                UI.title.textContent = `${decodeURIComponent(titleParam)} ${currentType === 'movie' ? 'Movies' : 'TV Series'}`;
+                document.title = `${UI.title.textContent} - Kstream`;
+            }
         } else {
             endpoint = `/discover/${currentType}`;
-            const genres = { 
-                'action': currentType === 'movie' ? '28' : '10759', 
-                'comedy': '35', 
+            const genres = {
+                'action': currentType === 'movie' ? '28' : '10759',
+                'comedy': '35',
                 'horror': '27',
                 'animation': '16',
                 'documentary': '99',
@@ -97,7 +97,7 @@ async function loadContent() {
                 'crime': '80',
                 'adventure': '12'
             };
-            
+
             if (genres[currentCategory]) {
                 params.with_genres = genres[currentCategory];
             } else {
@@ -117,7 +117,7 @@ async function loadContent() {
         });
         UI.items.appendChild(fragment);
         currentPage++;
-        
+
         if (currentPage > data.total_pages) {
             UI.loadMoreBtn.style.display = "none";
         }
@@ -137,23 +137,23 @@ function createMediaCard(item, type = 'movie') {
     const title = item.title || item.name;
     const date = item.release_date || item.first_air_date || "N/A";
     const year = date.split("-")[0];
-    const mediaType = item.media_type || type; 
+    const mediaType = item.media_type || type;
 
     const posterDiv = document.createElement("div");
     posterDiv.classList.add("poster");
     const posterLink = document.createElement("div");
     const posterImg = document.createElement("img");
     posterImg.draggable = false;
-    posterImg.src = item.poster_path 
-        ? `${CONFIG.IMAGE_URL}${item.poster_path}` 
+    posterImg.src = item.poster_path
+        ? `${CONFIG.IMAGE_URL}${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     posterImg.alt = title;
     posterImg.loading = "lazy";
-    
+
     posterImg.style.opacity = "0";
     posterImg.style.transition = "opacity 0.3s";
     posterImg.onload = () => posterImg.style.opacity = "1";
-    
+
     posterLink.appendChild(posterImg);
     posterDiv.appendChild(posterLink);
 

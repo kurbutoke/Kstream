@@ -1,56 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=no">
-    <meta name="author" content="Kstream">
-    <title>Browse | Kstream</title>
-    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="./img/favicon.png" type="image/png">
-    <link rel="stylesheet" href="style.css">
-    <meta name="theme-color" content="#0f0f0f">
-  </head>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=no">
+  <meta name="author" content="Kstream">
+  <title>Browse | Kstream</title>
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="./img/favicon.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#0f0f0f">
+</head>
+
 <body>
-    <div class="wrapper">
-      <header>
-        <div class="container">
-          <div class="wrapper justify-content-center align-items-center">
-            <div class="i-head">
-              <div class="logo w-100 text-center d-block font-weight-bold">
-                <img class="home" id="home" onclick="window.location.href = '/Kstream/'" src="./img/logo.svg" alt="Kstream" width="141" height="47" style="cursor: pointer;">
-              </div>
+  <div class="wrapper">
+    <header>
+      <div class="container">
+        <div class="wrapper justify-content-center align-items-center">
+          <div class="i-head">
+            <div class="logo w-100 text-center d-block font-weight-bold">
+              <img class="home" id="home" onclick="window.location.href = '/Kstream/'" src="./img/logo.svg"
+                alt="Kstream" width="141" height="47" style="cursor: pointer;">
             </div>
           </div>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main>
-        <div class="container">
-            <div class="section-header" style="margin-top: 2rem;">
-                <div class="section-title" id="page-title">Loading...</div>
-            </div>
-            
-            <!-- Grid Container -->
-            <div class="movies items" id="browse-items" style="flex-wrap: wrap; overflow: visible; justify-content: center; height: auto; max-height: none; width: 100%; left: auto; right: auto; margin-left: 0; margin-right: 0; padding: 0; gap: 20px;">
-                <!-- Items injected here -->
-            </div>
-
-            <!-- Load More Button -->
-            <div class="load-more-container" style="text-align: center; margin: 40px 0;">
-                <button id="load-more-btn" class="tab-pill active" style="padding: 10px 30px; font-size: 1rem; border: none;">Load More</button>
-            </div>
+    <main>
+      <div class="container">
+        <div class="section-header" style="margin-top: 2rem;">
+          <div class="section-title" id="page-title">Loading...</div>
         </div>
-      </main>
 
-      <footer>
-        <div class="container">
-          <div class="abs">
-            <p style="margin-bottom: 5px">Kstream is top of free streaming website.</p>
-          </div>
+        <!-- Grid Container -->
+        <div class="movies items" id="browse-items"
+          style="flex-wrap: wrap; overflow: visible; justify-content: center; height: auto; max-height: none; width: 100%; left: auto; right: auto; margin-left: 0; margin-right: 0; padding: 0; gap: 20px;">
+          <!-- Items injected here -->
         </div>
-      </footer>
-    </div>
+
+        <!-- Load More Button -->
+        <div class="load-more-container" style="text-align: center; margin: 40px 0;">
+          <button id="load-more-btn" class="tab-pill active"
+            style="padding: 10px 30px; font-size: 1rem; border: none;">Load More</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="abs">
+          <p style="margin-bottom: 5px">Kstream is top of free streaming website.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
 </body>
 <script type='text/javascript' src='./browse.js' async='async'></script>
+
 </html>

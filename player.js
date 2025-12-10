@@ -160,12 +160,12 @@ async function load(mediaType, itemId, seasonParam = null, episodeParam = null) 
 
     UI.selected.setAttribute("used", "S1");
     UI.reader.style.display = "block";
-    
+
     if (mediaType === "movie") {
         let savedServer = "S1";
         try {
             savedServer = localStorage.getItem('lastServer') || "S1";
-        } catch(e) {}
+        } catch (e) { }
         servers(savedServer);
     } else {
         await handleTVShowLogic(data, itemId, seasonParam, episodeParam);
@@ -176,16 +176,16 @@ async function load(mediaType, itemId, seasonParam = null, episodeParam = null) 
 
 async function renderCollection(collectionId) {
     const collectionData = await fetchTMDB(`/collection/${collectionId}`);
-    
+
     if (collectionData && collectionData.parts && collectionData.parts.length > 0) {
         const section = document.getElementById("collection-section");
         const container = document.getElementById("collection-items");
         const title = document.getElementById("collection-title");
-        
+
         title.textContent = collectionData.name;
         section.style.display = "block";
         container.innerHTML = "";
-        
+
         // Sort by release date
         const parts = collectionData.parts.sort((a, b) => {
             const dateA = a.release_date ? new Date(a.release_date) : new Date(0);
@@ -199,7 +199,7 @@ async function renderCollection(collectionId) {
                 fragment.appendChild(createMediaCard(part, 'movie'));
             }
         });
-        
+
         container.appendChild(fragment);
         enableDragScroll(container);
     } else {
@@ -328,7 +328,7 @@ async function handleTVShowLogic(data, itemId, seasonParam, episodeParam) {
     document.getElementById("boom").style.display = "none";
     UI.items.style.display = "contents";
     UI.seasonSelect.innerHTML = "";
-    UI.seasonEpisodeSelection.style.display = "contents";
+    UI.seasonEpisodeSelection.style.display = "flex";
 
     const today = new Date();
     let hasSeasons = false;
@@ -365,7 +365,7 @@ async function handleTVShowLogic(data, itemId, seasonParam, episodeParam) {
         let savedServer = "S1";
         try {
             savedServer = localStorage.getItem('lastServer') || "S1";
-        } catch(e) {}
+        } catch (e) { }
         servers(savedServer);
     }
 }
@@ -432,14 +432,14 @@ function servers(serverID) {
     if (url) {
         UI.reader.src = url;
         UI.selected.setAttribute("used", serverID);
-        
+
         // Robust UI update: ensure the dropdown matches the active server
         // We check if the option exists before setting it to avoid errors or mismatches
         const optionExists = [...UI.selected.options].some(o => o.value === serverID);
         if (UI.selected && optionExists) {
             UI.selected.value = serverID;
         }
-        
+
         UI.reader.style.display = "block";
 
         // Save preference
@@ -510,17 +510,17 @@ window.addEventListener("message", function (event) {
         // 2. Videasy / Generic Object format (detect by properties)
         // Videasy often sends: { event: "timeupdate", time: 123, duration: 456 } or similar
         else if (msg.event === "timeupdate" || msg.event === "pause" || msg.type === "timeupdate") {
-             const currentTime = msg.currentTime || msg.time || (msg.data ? msg.data.currentTime : 0);
-             const duration = msg.duration || (msg.data ? msg.data.duration : 0);
-             let progress = msg.progress || (msg.data ? msg.data.progress : 0);
-             
-             if (!progress && duration > 0 && currentTime > 0) {
-                 progress = (currentTime / duration) * 100;
-             }
+            const currentTime = msg.currentTime || msg.time || (msg.data ? msg.data.currentTime : 0);
+            const duration = msg.duration || (msg.data ? msg.data.duration : 0);
+            let progress = msg.progress || (msg.data ? msg.data.progress : 0);
 
-             if (currentTime && duration) {
-                 saveProgress(progress, currentTime, duration, msg.event || msg.type);
-             }
+            if (!progress && duration > 0 && currentTime > 0) {
+                progress = (currentTime / duration) * 100;
+            }
+
+            if (currentTime && duration) {
+                saveProgress(progress, currentTime, duration, msg.event || msg.type);
+            }
         }
     } catch (e) {
         console.error("Error handling message:", e);
