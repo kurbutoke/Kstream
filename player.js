@@ -46,6 +46,13 @@ async function fetchTMDB(endpoint, params = {}) {
     }
 }
 
+function updateURL(season, episode) {
+    const url = new URL(window.location);
+    if (season) url.searchParams.set('season', season);
+    if (episode) url.searchParams.set('episode', episode);
+    window.history.pushState({}, '', url);
+}
+
 function getURLParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     const media = urlParams.get('media');
@@ -544,10 +551,12 @@ UI.seasonSelect.addEventListener("change", async () => {
     const season = UI.seasonSelect.value;
     await loadEpisodesForSeason(seriesId, season);
     servers(UI.selected.getAttribute('used'));
+    updateURL(season, UI.episodeSelect.value);
 });
 
 UI.episodeSelect.addEventListener("change", () => {
     servers(UI.selected.getAttribute('used'));
+    updateURL(UI.seasonSelect.value, UI.episodeSelect.value);
 });
 
 UI.refresh.addEventListener('click', () => {
@@ -564,6 +573,7 @@ UI.next.addEventListener('click', () => {
     if (currentEpisode < maxEpisodes) {
         UI.episodeSelect.value = (currentEpisode + 1).toString();
         servers(UI.selected.getAttribute('used'));
+        updateURL(UI.seasonSelect.value, UI.episodeSelect.value);
     } else if (currentSeason < maxSeasons) {
         UI.seasonSelect.value = (currentSeason + 1).toString();
         UI.seasonSelect.dispatchEvent(new Event('change'));
@@ -582,6 +592,7 @@ UI.last.addEventListener('click', async () => {
     UI.episodeSelect.value = maxEpisodes;
 
     servers(UI.selected.getAttribute('used'));
+    updateURL(UI.seasonSelect.value, UI.episodeSelect.value);
 });
 
 function getFavorites() {
