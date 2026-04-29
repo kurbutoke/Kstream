@@ -84,7 +84,7 @@ function createMediaCard(item, type = 'movie') {
     posterImg.draggable = false;
     posterImg.decoding = "async";
     posterImg.src = item.poster_path
-        ? `${CONFIG.IMAGE_URL}${item.poster_path}`
+        ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     posterImg.alt = title;
     posterImg.loading = "lazy";
@@ -135,7 +135,7 @@ ELEMENTS.searchInput.addEventListener("input", (UTILS.debounce || debounce)(asyn
 
                 const poster = document.createElement("img");
                 poster.decoding = "async";
-                poster.src = item.poster_path ? `${CONFIG.IMAGE_URL}${item.poster_path}` : `${CONFIG.DOMAIN}/img/empty.png`;
+                poster.src = item.poster_path ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}` : `${CONFIG.DOMAIN}/img/empty.png`;
                 poster.className = "poster";
 
                 const info = document.createElement("div");

@@ -165,7 +165,7 @@ function createMediaCard(item, type = 'movie') {
     posterImg.draggable = false;
     posterImg.decoding = "async";
     posterImg.src = item.poster_path
-        ? `${CONFIG.IMAGE_URL}${item.poster_path}`
+        ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     posterImg.alt = title;
     posterImg.loading = "lazy";
