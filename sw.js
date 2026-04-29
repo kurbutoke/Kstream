@@ -1,12 +1,27 @@
-const CACHE_NAME = 'kstream-v1';
+const CACHE_NAME = 'kstream-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
+    './about.html',
+    './faq.html',
+    './privacy.html',
+    './terms.html',
+    './features.html',
+    './offline.html',
+    './browse.html',
+    './categories.html',
+    './player.html',
+    './person.html',
     './style.css',
+    './config.js',
+    './utils.js',
     './home.js',
     './player.js',
-    './utils.js',
+    './browse.js',
+    './person.js',
     './manifest.json',
+    './robots.txt',
+    './sitemap.xml',
     './img/favicon.png',
     './img/logo.png',
     './img/logo.svg',
@@ -52,6 +67,14 @@ self.addEventListener('fetch', (event) => {
                     headers: { 'Content-Type': 'application/json' }
                 });
             })
+        );
+        return;
+    }
+
+    // Navigation: fallback to offline page
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match('./offline.html'))
         );
         return;
     }

@@ -1,10 +1,13 @@
-const CONFIG = {
-    API_KEY: "a16ae8a9e473e167a27b616834d5be28",
-    BEARER_TOKEN: "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",
+const CONFIG = window.KSTREAM_CONFIG || {
+    API_KEY: "",
+    BEARER_TOKEN: "",
     BASE_URL: "https://api.themoviedb.org/3",
     IMAGE_URL: "https://image.tmdb.org/t/p",
-    DOMAIN: "https://kurbutoke.github.io/Kstream"
+    DOMAIN: ""
 };
+
+const UTILS = window.KSTREAM_UTILS || {};
+const SERVERS = window.KSTREAM_SERVERS || [];
 
 const UI = {
     items: document.getElementById("items"),
@@ -23,7 +26,10 @@ const UI = {
     mid: document.getElementById("mid"),
     mediatype: document.getElementById("mediatype"),
     recommendationsItems: document.getElementById("recommendations-items"),
-    recommendationsSection: document.getElementById("recommendations")
+    recommendationsSection: document.getElementById("recommendations"),
+    customServerBox: document.getElementById("custom-server-box"),
+    customServerInput: document.getElementById("custom-server-input"),
+    customServerSave: document.getElementById("custom-server-save")
 };
 
 async function fetchTMDB(endpoint, params = {}) {
@@ -54,15 +60,15 @@ function updateURL(season, episode) {
 }
 
 function getURLParameters() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const media = urlParams.get('media');
-    const id = urlParams.get('id');
-    const season = urlParams.get('season');
-    const episode = urlParams.get('episode');
+    const media = UTILS.getParam ? UTILS.getParam('media') : new URLSearchParams(window.location.search).get('media');
+    const id = UTILS.safeNumber ? UTILS.safeNumber(UTILS.getParam('id')) : Number(new URLSearchParams(window.location.search).get('id'));
+    const season = UTILS.safeNumber ? UTILS.safeNumber(UTILS.getParam('season')) : Number(new URLSearchParams(window.location.search).get('season'));
+    const episode = UTILS.safeNumber ? UTILS.safeNumber(UTILS.getParam('episode')) : Number(new URLSearchParams(window.location.search).get('episode'));
 
-    if (media && id) {
-        load(media, id, season, episode);
-        updateBookmarkIcon(media, id);
+    const safeMedia = media === 'tv' ? 'tv' : 'movie';
+    if (id) {
+        load(safeMedia, id, season || null, episode || null);
+        updateBookmarkIcon(safeMedia, id);
     }
 }
 
@@ -140,8 +146,15 @@ async function load(mediaType, itemId, seasonParam = null, episodeParam = null) 
 
     const castElement = document.getElementById("cast");
     if (data.credits && data.credits.cast && data.credits.cast.length > 0) {
-        const castLinks = data.credits.cast.slice(0, 5).map(a => `<a href="person.html?id=${a.id}" class="cast-link">${a.name}</a>`).join(", ");
-        castElement.innerHTML = castLinks;
+        castElement.innerHTML = "";
+        data.credits.cast.slice(0, 5).forEach((actor, idx) => {
+            const link = document.createElement('a');
+            link.href = `person.html?id=${actor.id}`;
+            link.className = 'cast-link';
+            link.textContent = actor.name;
+            castElement.appendChild(link);
+            if (idx < 4) castElement.appendChild(document.createTextNode(', '));
+        });
         const parentRow = castElement.closest(".detail > div");
         if (parentRow) parentRow.style.display = "flex";
     } else {
@@ -173,6 +186,9 @@ async function load(mediaType, itemId, seasonParam = null, episodeParam = null) 
         try {
             savedServer = localStorage.getItem('lastServer') || "S1";
         } catch (e) { }
+        if (savedServer === "CUSTOM" && UI.customServerBox) {
+            UI.customServerBox.style.display = "flex";
+        }
         servers(savedServer);
     } else {
         await handleTVShowLogic(data, itemId, seasonParam, episodeParam);
@@ -255,6 +271,7 @@ function createMediaCard(item, type = 'movie') {
     const posterLink = document.createElement("div");
     const posterImg = document.createElement("img");
     posterImg.draggable = false;
+    posterImg.decoding = "async";
     posterImg.src = item.poster_path
         ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
@@ -373,6 +390,9 @@ async function handleTVShowLogic(data, itemId, seasonParam, episodeParam) {
         try {
             savedServer = localStorage.getItem('lastServer') || "S1";
         } catch (e) { }
+        if (savedServer === "CUSTOM" && UI.customServerBox) {
+            UI.customServerBox.style.display = "flex";
+        }
         servers(savedServer);
     }
 }
@@ -412,31 +432,37 @@ function servers(serverID) {
     let url = "";
 
     const getUrl = (provider) => {
-        if (media === "movie") {
-            const movieMap = {
-                "S1": `https://vidking.net/embed/movie/${id}?autoplay=1`,
-                "S2": `https://player.videasy.net/movie/${id}`,
-                "S3": `https://vidsrc.to/embed/movie/${id}`,
-                "S4": `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-                "S5": `https://frembed.ink/api/film.php?id=${id}`
-            };
-            return movieMap[provider];
-        } else {
-            const s = UI.seasonSelect.value || 1;
-            const e = UI.episodeSelect.value || 1;
-            const tvMap = {
-                "S1": `https://vidking.net/embed/tv/${id}/${s}/${e}?autoplay=1`,
-                "S2": `https://player.videasy.net/tv/${id}/${s}/${e}`,
-                "S3": `https://vidsrc.to/embed/tv/${id}/${s}/${e}`,
-                "S4": `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`,
-                "S5": `https://frembed.ink/api/serie.php?id=${id}&sa=${s}&epi=${e}`
-            };
-            return tvMap[provider];
+        const s = UI.seasonSelect.value || 1;
+        const e = UI.episodeSelect.value || 1;
+        if (provider === "AUTO") {
+            try {
+                return localStorage.getItem('lastServer') || "S1";
+            } catch (e) { }
+            return "S1";
         }
+
+        if (provider === "CUSTOM") {
+            const custom = document.getElementById("custom-server-input")?.value;
+            if (!custom) return "";
+            return custom
+                .replaceAll("{id}", id)
+                .replaceAll("{season}", s)
+                .replaceAll("{episode}", e);
+        }
+
+        const entry = SERVERS.find((s) => s.id === provider);
+        if (!entry) return "";
+        return media === "movie"
+            ? entry.movie({id})
+            : entry.tv({id, s, e});
     };
 
     url = getUrl(serverID);
     if (url) {
+        if (url.startsWith("AUTO:")) {
+            servers(url.replace("AUTO:", ""));
+            return;
+        }
         UI.reader.src = url;
         UI.selected.setAttribute("used", serverID);
 
@@ -451,7 +477,9 @@ function servers(serverID) {
 
         // Save preference
         try {
-            localStorage.setItem('lastServer', serverID);
+            if (serverID && serverID !== "AUTO") {
+                localStorage.setItem('lastServer', serverID);
+            }
         } catch (e) {
             console.warn('LocalStorage save failed', e);
         }
@@ -463,7 +491,12 @@ function servers(serverID) {
 function saveToHistory(progressData = null) {
     if (!window.currentMediaData) return;
 
-    const history = JSON.parse(localStorage.getItem('watchHistory')) || [];
+    let history = [];
+    try {
+        history = JSON.parse(localStorage.getItem('watchHistory')) || [];
+    } catch (e) {
+        history = [];
+    }
     const media = UI.mediatype.textContent.toLowerCase() === "movie" ? "movie" : "tv";
 
     let historyItem = {
@@ -489,11 +522,24 @@ function saveToHistory(progressData = null) {
 
     if (filteredHistory.length > 20) filteredHistory.pop();
 
-    localStorage.setItem('watchHistory', JSON.stringify(filteredHistory));
+    try {
+        localStorage.setItem('watchHistory', JSON.stringify(filteredHistory));
+    } catch (e) {}
 }
 
 window.addEventListener("message", function (event) {
     try {
+        const allowedOrigins = [
+            "https://vidking.net",
+            "https://player.videasy.net",
+            "https://vidsrc.to",
+            "https://multiembed.mov",
+            "https://frembed.ink"
+        ];
+        if (event.origin && event.origin !== 'null' && !allowedOrigins.includes(event.origin)) {
+            return;
+        }
+
         let msg = event.data;
 
         // Parse if string
@@ -657,3 +703,28 @@ function generateAndCopyLink() {
 }
 
 window.addEventListener('load', getURLParameters);
+
+if (UI.selected) {
+    UI.selected.addEventListener('change', () => {
+        const isCustom = UI.selected.value === "CUSTOM";
+        if (UI.customServerBox) UI.customServerBox.style.display = isCustom ? "flex" : "none";
+    });
+}
+
+if (UI.customServerSave) {
+    UI.customServerSave.addEventListener('click', () => {
+        const value = (UI.customServerInput?.value || "").trim();
+        if (!value) return;
+        try {
+            localStorage.setItem("customServerTemplate", value);
+        } catch (e) {}
+        servers("CUSTOM");
+    });
+}
+
+try {
+    const storedTemplate = localStorage.getItem("customServerTemplate");
+    if (storedTemplate && UI.customServerInput) {
+        UI.customServerInput.value = storedTemplate;
+    }
+} catch (e) {}

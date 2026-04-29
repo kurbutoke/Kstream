@@ -2,10 +2,12 @@
   "name": "Kstream",
   "short_name": "Kstream",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#181818",
   "theme_color": "#0f0f0f",
   "description": "Watch TV Series & Movies Online for Free!",
+  "categories": ["entertainment", "video"],
   "icons": [
     {
       "src": "img/favicon.png",
@@ -16,6 +18,20 @@
       "src": "img/logo.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Trending Movies",
+      "short_name": "Trending",
+      "url": "./browse.html?type=movie&category=trending",
+      "icons": [{ "src": "img/favicon.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Top Rated TV",
+      "short_name": "Top TV",
+      "url": "./browse.html?type=tv&category=top_rated",
+      "icons": [{ "src": "img/favicon.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }

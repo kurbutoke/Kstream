@@ -1,10 +1,12 @@
-const CONFIG = {
-    API_KEY: "a16ae8a9e473e167a27b616834d5be28",
-    BEARER_TOKEN: "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",
+const CONFIG = window.KSTREAM_CONFIG || {
+    API_KEY: "",
+    BEARER_TOKEN: "",
     BASE_URL: "https://api.themoviedb.org/3",
     IMAGE_URL: "https://image.tmdb.org/t/p/w400",
-    DOMAIN: "https://kurbutoke.github.io/Kstream"
+    DOMAIN: ""
 };
+
+const UTILS = window.KSTREAM_UTILS || {};
 
 const ELEMENTS = {
     searchInput: document.getElementById("searchInput"),
@@ -15,7 +17,8 @@ const ELEMENTS = {
     favoritesItems: document.getElementById("favorites-items"),
     historyItems: document.getElementById("history-items"),
     historySection: document.getElementById("history-section"),
-    searchWrap: document.querySelector(".search-wrap")
+    searchWrap: document.querySelector(".search-wrap"),
+    recentSearches: document.getElementById("recent-searches")
 };
 
 async function fetchTMDB(endpoint, params = {}) {
@@ -79,6 +82,7 @@ function createMediaCard(item, type = 'movie') {
     const posterLink = document.createElement("div");
     const posterImg = document.createElement("img");
     posterImg.draggable = false;
+    posterImg.decoding = "async";
     posterImg.src = item.poster_path
         ? `${CONFIG.IMAGE_URL}${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
@@ -95,7 +99,7 @@ function createMediaCard(item, type = 'movie') {
     const metaDiv = document.createElement("div");
     metaDiv.classList.add("meta");
     const metaSpan = document.createElement("span");
-    metaSpan.innerHTML = `${title} (${year})`;
+    metaSpan.textContent = `${title} (${year})`;
     metaDiv.appendChild(metaSpan);
 
     itemDiv.appendChild(posterDiv);
@@ -108,8 +112,8 @@ function createMediaCard(item, type = 'movie') {
     return itemDiv;
 }
 
-ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
-    const searchTerm = event.target.value.trim();
+ELEMENTS.searchInput.addEventListener("input", (UTILS.debounce || debounce)(async (event) => {
+    const searchTerm = (UTILS.normalizeInput ? UTILS.normalizeInput(event.target.value, 60) : event.target.value.trim());
     ELEMENTS.searchResults.innerHTML = "";
 
     if (searchTerm.length > 0) {
@@ -130,6 +134,7 @@ ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
                 mediaItem.style.cursor = "pointer";
 
                 const poster = document.createElement("img");
+                poster.decoding = "async";
                 poster.src = item.poster_path ? `${CONFIG.IMAGE_URL}${item.poster_path}` : `${CONFIG.DOMAIN}/img/empty.png`;
                 poster.className = "poster";
 
@@ -162,6 +167,8 @@ ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
             });
 
             ELEMENTS.searchResults.appendChild(fragment);
+            persistRecentSearch(searchTerm);
+            renderRecentSearches();
         } else {
             const noResults = document.createElement("div");
             noResults.className = "no-results";
@@ -174,12 +181,70 @@ ELEMENTS.searchInput.addEventListener("input", debounce(async (event) => {
     }
 }, 300));
 
+document.addEventListener("click", (event) => {
+    if (!ELEMENTS.searchWrap) return;
+    if (!ELEMENTS.searchWrap.contains(event.target)) {
+        ELEMENTS.searchResults.style.display = "none";
+        searchLoader.style.display = "none";
+    }
+});
+
+ELEMENTS.searchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        const term = (UTILS.normalizeInput ? UTILS.normalizeInput(event.target.value, 60) : event.target.value.trim());
+        if (term) {
+            persistRecentSearch(term);
+            window.location.href = `browse.html?type=movie&category=search&query=${encodeURIComponent(term)}`;
+        }
+    }
+});
+
 function debounce(func, wait) {
     let timeout;
     return function (...args) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
+}
+
+function getRecentSearches() {
+    try {
+        const stored = localStorage.getItem("recentSearches");
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function persistRecentSearch(term) {
+    const clean = term.trim();
+    if (!clean) return;
+    const list = getRecentSearches().filter((t) => t.toLowerCase() !== clean.toLowerCase());
+    list.unshift(clean);
+    const next = list.slice(0, 8);
+    try {
+        localStorage.setItem("recentSearches", JSON.stringify(next));
+    } catch (e) {}
+}
+
+function renderRecentSearches() {
+    if (!ELEMENTS.recentSearches) return;
+    const list = getRecentSearches();
+    if (list.length === 0) {
+        ELEMENTS.recentSearches.innerHTML = "";
+        return;
+    }
+    ELEMENTS.recentSearches.innerHTML = "";
+    list.forEach((term) => {
+        const chip = document.createElement("button");
+        chip.className = "search-chip";
+        chip.textContent = term;
+        chip.onclick = () => {
+            window.location.href = `browse.html?type=movie&category=search&query=${encodeURIComponent(term)}`;
+        };
+        ELEMENTS.recentSearches.appendChild(chip);
+    });
 }
 
 window.updateTrending = async function (type, tab) {
@@ -336,7 +401,12 @@ window.clearHistory = function (event) {
 };
 
 function updateHistory() {
-    const history = JSON.parse(localStorage.getItem('watchHistory')) || [];
+    let history = [];
+    try {
+        history = JSON.parse(localStorage.getItem('watchHistory')) || [];
+    } catch (e) {
+        history = [];
+    }
 
     if (history.length === 0) {
         ELEMENTS.historySection.style.display = 'none';
@@ -462,12 +532,16 @@ window.toggleFavorites = function () {
 
 window.updateFavorites = async function (filter = 'all', tab = null) {
     if (tab) {
-        event && event.stopPropagation();
         handleTabActive(tab);
     }
 
-    const favoritesData = localStorage.getItem('favorites');
-    const favorites = favoritesData ? JSON.parse(favoritesData) : [];
+    let favorites = [];
+    try {
+        const favoritesData = localStorage.getItem('favorites');
+        favorites = favoritesData ? JSON.parse(favoritesData) : [];
+    } catch (e) {
+        favorites = [];
+    }
 
     const filteredFavorites = filter === 'all'
         ? favorites
@@ -553,4 +627,5 @@ window.addEventListener("load", () => {
     updateSeries('top_rated');
     updateFavorites('all');
     updateHistory();
+    renderRecentSearches();
 });

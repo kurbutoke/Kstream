@@ -1,10 +1,12 @@
-const CONFIG = {
-    API_KEY: "a16ae8a9e473e167a27b616834d5be28",
-    BEARER_TOKEN: "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",
+const CONFIG = window.KSTREAM_CONFIG || {
+    API_KEY: "",
+    BEARER_TOKEN: "",
     BASE_URL: "https://api.themoviedb.org/3",
     IMAGE_URL: "https://image.tmdb.org/t/p/w400",
-    DOMAIN: "https://kurbutoke.github.io/Kstream"
+    DOMAIN: ""
 };
+
+const UTILS = window.KSTREAM_UTILS || {};
 
 const UI = {
     items: document.getElementById("browse-items"),
@@ -15,6 +17,7 @@ const UI = {
 let currentPage = 1;
 let currentType = 'movie';
 let currentCategory = 'popular';
+let currentQuery = '';
 let isLoading = false;
 
 async function fetchTMDB(endpoint, params = {}) {
@@ -40,11 +43,17 @@ async function fetchTMDB(endpoint, params = {}) {
 
 function getURLParameters() {
     const urlParams = new URLSearchParams(window.location.search);
-    currentType = urlParams.get('type') || 'movie';
+    const rawType = urlParams.get('type') || 'movie';
+    currentType = rawType === 'tv' ? 'tv' : 'movie';
     currentCategory = urlParams.get('category') || 'popular';
+    currentQuery = UTILS.normalizeInput ? UTILS.normalizeInput(urlParams.get('query') || '', 60) : (urlParams.get('query') || '');
 
     const typeTitle = currentType === 'movie' ? 'Movies' : 'TV Series';
     let categoryTitle = currentCategory.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+    if (currentCategory === 'search' && currentQuery) {
+        categoryTitle = `Search: "${currentQuery}"`;
+    }
 
     UI.title.textContent = `${categoryTitle} ${typeTitle}`;
     document.title = `${UI.title.textContent} - Kstream`;
@@ -60,7 +69,17 @@ async function loadContent() {
     let endpoint = '';
     let params = { page: currentPage };
 
-    if (currentCategory === 'trending') {
+    if (currentCategory === 'search' && !currentQuery) {
+        UI.items.innerHTML = "<div class='no-results'>Type a search on the homepage to begin.</div>";
+        UI.loadMoreBtn.style.display = "none";
+        isLoading = false;
+        return;
+    }
+
+    if (currentCategory === 'search' && currentQuery) {
+        endpoint = `/search/${currentType}`;
+        params.query = currentQuery;
+    } else if (currentCategory === 'trending') {
         endpoint = `/trending/${currentType}/week`;
     } else if (currentCategory === 'top_rated') {
         endpoint = `/${currentType}/top_rated`;
@@ -144,6 +163,7 @@ function createMediaCard(item, type = 'movie') {
     const posterLink = document.createElement("div");
     const posterImg = document.createElement("img");
     posterImg.draggable = false;
+    posterImg.decoding = "async";
     posterImg.src = item.poster_path
         ? `${CONFIG.IMAGE_URL}${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
@@ -160,7 +180,7 @@ function createMediaCard(item, type = 'movie') {
     const metaDiv = document.createElement("div");
     metaDiv.classList.add("meta");
     const metaSpan = document.createElement("span");
-    metaSpan.innerHTML = `${title} (${year})`;
+    metaSpan.textContent = `${title} (${year})`;
     metaDiv.appendChild(metaSpan);
 
     itemDiv.appendChild(posterDiv);

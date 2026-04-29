@@ -1,10 +1,12 @@
-const CONFIG = {
-    API_KEY: "a16ae8a9e473e167a27b616834d5be28",
-    BEARER_TOKEN: "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",
+const CONFIG = window.KSTREAM_CONFIG || {
+    API_KEY: "",
+    BEARER_TOKEN: "",
     BASE_URL: "https://api.themoviedb.org/3",
     IMAGE_URL: "https://image.tmdb.org/t/p",
-    DOMAIN: "https://kurbutoke.github.io/Kstream"
+    DOMAIN: ""
 };
+
+const UTILS = window.KSTREAM_UTILS || {};
 
 const UI = {
     image: document.getElementById("person-image"),
@@ -42,7 +44,7 @@ async function fetchTMDB(endpoint, params = {}) {
 
 function getURLParameters() {
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
+    const id = UTILS.safeNumber ? UTILS.safeNumber(urlParams.get('id')) : Number(urlParams.get('id'));
 
     if (id) {
         loadPerson(id);
@@ -65,15 +67,20 @@ async function loadPerson(personId) {
 
     if (bioText.length > maxChars) {
         const truncatedText = bioText.slice(0, maxChars) + "...";
-        
-        UI.biography.innerHTML = `
-            <span class="bio-text">${truncatedText}</span>
-            <span class="read-more-btn" style="color: var(--primary-color); cursor: pointer; margin-left: 5px; font-weight: bold;">Read More</span>
-        `;
-        
-        const readMoreBtn = UI.biography.querySelector('.read-more-btn');
-        const bioSpan = UI.biography.querySelector('.bio-text');
-        
+
+        UI.biography.innerHTML = "";
+        const bioSpan = document.createElement("span");
+        bioSpan.className = "bio-text";
+        bioSpan.textContent = truncatedText;
+
+        const readMoreBtn = document.createElement("span");
+        readMoreBtn.className = "read-more-btn";
+        readMoreBtn.textContent = "Read More";
+        readMoreBtn.style.color = "var(--primary-color)";
+        readMoreBtn.style.cursor = "pointer";
+        readMoreBtn.style.marginLeft = "5px";
+        readMoreBtn.style.fontWeight = "bold";
+
         readMoreBtn.onclick = () => {
             if (readMoreBtn.textContent === "Read More") {
                 bioSpan.textContent = bioText;
@@ -83,6 +90,9 @@ async function loadPerson(personId) {
                 readMoreBtn.textContent = "Read More";
             }
         };
+
+        UI.biography.appendChild(bioSpan);
+        UI.biography.appendChild(readMoreBtn);
     } else {
         UI.biography.textContent = bioText;
     }
@@ -180,6 +190,7 @@ function createMediaCard(item) {
     const posterLink = document.createElement("div");
     const posterImg = document.createElement("img");
     posterImg.draggable = false;
+    posterImg.decoding = "async";
     posterImg.src = item.poster_path 
         ? `${CONFIG.IMAGE_URL}/w300${item.poster_path}` 
         : `${CONFIG.DOMAIN}/img/empty.png`;
@@ -196,13 +207,15 @@ function createMediaCard(item) {
     const metaDiv = document.createElement("div");
     metaDiv.classList.add("meta");
     const metaSpan = document.createElement("span");
-    
-    let metaText = `${title} (${year})`;
+    metaSpan.textContent = `${title} (${year})`;
     if (item.character) {
-        metaText += `<div style="font-size:0.8rem; color:#a0a0a0; margin-top:4px">as ${item.character}</div>`;
+        const role = document.createElement("div");
+        role.style.fontSize = "0.8rem";
+        role.style.color = "#a0a0a0";
+        role.style.marginTop = "4px";
+        role.textContent = `as ${item.character}`;
+        metaSpan.appendChild(role);
     }
-    
-    metaSpan.innerHTML = metaText;
     metaDiv.appendChild(metaSpan);
 
     itemDiv.appendChild(posterDiv);
