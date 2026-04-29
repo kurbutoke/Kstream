@@ -529,17 +529,6 @@ function saveToHistory(progressData = null) {
 
 window.addEventListener("message", function (event) {
     try {
-        const allowedOrigins = [
-            "https://vidking.net",
-            "https://player.videasy.net",
-            "https://vidsrc.to",
-            "https://multiembed.mov",
-            "https://frembed.ink"
-        ];
-        if (event.origin && event.origin !== 'null' && !allowedOrigins.includes(event.origin)) {
-            return;
-        }
-
         let msg = event.data;
 
         // Parse if string
