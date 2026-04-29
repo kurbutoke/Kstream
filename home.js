@@ -500,7 +500,7 @@ function createActorCard(person) {
 
     const img = document.createElement('img');
     img.src = person.profile_path
-        ? `${CONFIG.IMAGE_URL}${person.profile_path}`
+        ? `${CONFIG.IMAGE_URL}/w400${person.profile_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     img.className = 'actor-img';
 
