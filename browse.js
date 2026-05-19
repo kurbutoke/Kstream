@@ -2,7 +2,7 @@ const CONFIG = window.KSTREAM_CONFIG || {
     API_KEY: "",
     BEARER_TOKEN: "",
     BASE_URL: "https://api.themoviedb.org/3",
-    IMAGE_URL: "https://image.tmdb.org/t/p/w400",
+    IMAGE_URL: "https://image.tmdb.org/t/p/w342",
     DOMAIN: ""
 };
 
@@ -165,7 +165,7 @@ function createMediaCard(item, type = 'movie') {
     posterImg.draggable = false;
     posterImg.decoding = "async";
     posterImg.src = item.poster_path
-        ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}`
+        ? `${CONFIG.IMAGE_URL}/w342${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     posterImg.alt = title;
     posterImg.loading = "lazy";

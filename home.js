@@ -2,7 +2,7 @@ const CONFIG = window.KSTREAM_CONFIG || {
     API_KEY: "",
     BEARER_TOKEN: "",
     BASE_URL: "https://api.themoviedb.org/3",
-    IMAGE_URL: "https://image.tmdb.org/t/p/w400",
+    IMAGE_URL: "https://image.tmdb.org/t/p/w342",
     DOMAIN: ""
 };
 
@@ -17,8 +17,7 @@ const ELEMENTS = {
     favoritesItems: document.getElementById("favorites-items"),
     historyItems: document.getElementById("history-items"),
     historySection: document.getElementById("history-section"),
-    searchWrap: document.querySelector(".search-wrap"),
-    recentSearches: document.getElementById("recent-searches")
+    searchWrap: document.querySelector(".search-wrap")
 };
 
 async function fetchTMDB(endpoint, params = {}) {
@@ -84,7 +83,7 @@ function createMediaCard(item, type = 'movie') {
     posterImg.draggable = false;
     posterImg.decoding = "async";
     posterImg.src = item.poster_path
-        ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}`
+        ? `${CONFIG.IMAGE_URL}/w342${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     posterImg.alt = title;
     posterImg.loading = "lazy";
@@ -135,7 +134,7 @@ ELEMENTS.searchInput.addEventListener("input", (UTILS.debounce || debounce)(asyn
 
                 const poster = document.createElement("img");
                 poster.decoding = "async";
-                poster.src = item.poster_path ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}` : `${CONFIG.DOMAIN}/img/empty.png`;
+                poster.src = item.poster_path ? `${CONFIG.IMAGE_URL}/w342${item.poster_path}` : `${CONFIG.DOMAIN}/img/empty.png`;
                 poster.className = "poster";
 
                 const info = document.createElement("div");
@@ -167,8 +166,6 @@ ELEMENTS.searchInput.addEventListener("input", (UTILS.debounce || debounce)(asyn
             });
 
             ELEMENTS.searchResults.appendChild(fragment);
-            persistRecentSearch(searchTerm);
-            renderRecentSearches();
         } else {
             const noResults = document.createElement("div");
             noResults.className = "no-results";
@@ -194,7 +191,6 @@ ELEMENTS.searchInput.addEventListener("keydown", (event) => {
         event.preventDefault();
         const term = (UTILS.normalizeInput ? UTILS.normalizeInput(event.target.value, 60) : event.target.value.trim());
         if (term) {
-            persistRecentSearch(term);
             window.location.href = `browse.html?type=movie&category=search&query=${encodeURIComponent(term)}`;
         }
     }
@@ -208,44 +204,7 @@ function debounce(func, wait) {
     };
 }
 
-function getRecentSearches() {
-    try {
-        const stored = localStorage.getItem("recentSearches");
-        return stored ? JSON.parse(stored) : [];
-    } catch (e) {
-        return [];
-    }
-}
 
-function persistRecentSearch(term) {
-    const clean = term.trim();
-    if (!clean) return;
-    const list = getRecentSearches().filter((t) => t.toLowerCase() !== clean.toLowerCase());
-    list.unshift(clean);
-    const next = list.slice(0, 8);
-    try {
-        localStorage.setItem("recentSearches", JSON.stringify(next));
-    } catch (e) {}
-}
-
-function renderRecentSearches() {
-    if (!ELEMENTS.recentSearches) return;
-    const list = getRecentSearches();
-    if (list.length === 0) {
-        ELEMENTS.recentSearches.innerHTML = "";
-        return;
-    }
-    ELEMENTS.recentSearches.innerHTML = "";
-    list.forEach((term) => {
-        const chip = document.createElement("button");
-        chip.className = "search-chip";
-        chip.textContent = term;
-        chip.onclick = () => {
-            window.location.href = `browse.html?type=movie&category=search&query=${encodeURIComponent(term)}`;
-        };
-        ELEMENTS.recentSearches.appendChild(chip);
-    });
-}
 
 window.updateTrending = async function (type, tab) {
     if (tab) handleTabActive(tab);
@@ -500,7 +459,7 @@ function createActorCard(person) {
 
     const img = document.createElement('img');
     img.src = person.profile_path
-        ? `${CONFIG.IMAGE_URL}/w400${person.profile_path}`
+        ? `${CONFIG.IMAGE_URL}/w342${person.profile_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     img.className = 'actor-img';
 
@@ -627,5 +586,4 @@ window.addEventListener("load", () => {
     updateSeries('top_rated');
     updateFavorites('all');
     updateHistory();
-    renderRecentSearches();
 });

@@ -9,7 +9,7 @@ const CONFIG = {
     BASE_URL: "https://api.themoviedb.org/3",
     IMAGE_URL: "https://image.tmdb.org/t/p",
     IMAGE_SM: "https://image.tmdb.org/t/p/w300",
-    IMAGE_MD: "https://image.tmdb.org/t/p/w400",
+    IMAGE_MD: "https://image.tmdb.org/t/p/w342",
     IMAGE_LG: "https://image.tmdb.org/t/p/original",
     DOMAIN: "https://kurbutoke.github.io/Kstream"
 };

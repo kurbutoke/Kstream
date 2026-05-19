@@ -4,7 +4,7 @@ window.KSTREAM_CONFIG = {
     "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTZhZThhOWU0NzNlMTY3YTI3YjYxNjgzNGQ1YmUyOCIsInN1YiI6IjY0ZGZhNGNkYTNiNWU2MDEzOTAxNmMzYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MsTmKp7A_E7_IeiqVYfNVx-ZNzWlhECA_A4LESfHWbc",
   BASE_URL: "https://api.themoviedb.org/3",
   IMAGE_URL: "https://image.tmdb.org/t/p",
-  DOMAIN: "https://kurbutoke.github.io/Kstream",
+  DOMAIN: window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')),
   APP_NAME: "Kstream"
 };
 
@@ -17,33 +17,27 @@ window.KSTREAM_SERVERS = [
   },
   {
     id: "S1",
-    name: "VidKing",
-    movie: ({id}) => `https://vidking.net/embed/movie/${id}?autoplay=1`,
-    tv: ({id, s, e}) => `https://vidking.net/embed/tv/${id}/${s}/${e}?autoplay=1`
-  },
-  {
-    id: "S2",
     name: "Videasy",
     movie: ({id}) => `https://player.videasy.net/movie/${id}`,
     tv: ({id, s, e}) => `https://player.videasy.net/tv/${id}/${s}/${e}`
   },
   {
+    id: "S2",
+    name: "VidLink",
+    movie: ({id}) => `https://vidlink.pro/movie/${id}?primaryColor=00acc1`,
+    tv: ({id, s, e}) => `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=00acc1`
+  },
+  {
     id: "S3",
-    name: "Vidsrc.to",
-    movie: ({id}) => `https://vidsrc.to/embed/movie/${id}`,
-    tv: ({id, s, e}) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
+    name: "Vidsrc",
+    movie: ({id}) => `https://vidsrc.ru/movie/${id}`,
+    tv: ({id, s, e}) => `https://vidsrc.ru/tv/${id}/${s}/${e}`
   },
   {
     id: "S4",
-    name: "MultiEmbed",
-    movie: ({id}) => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-    tv: ({id, s, e}) => `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`
-  },
-  {
-    id: "S5",
-    name: "Frembed",
-    movie: ({id}) => `https://frembed.ink/api/film.php?id=${id}`,
-    tv: ({id, s, e}) => `https://frembed.ink/api/serie.php?id=${id}&sa=${s}&epi=${e}`
+    name: "Frembed (VF)",
+    movie: ({id}) => `https://frembed.one/embed/movie/${id}`,
+    tv: ({id, s, e}) => `https://frembed.one/embed/serie/${id}?sa=${s}&epi=${e}`
   },
   {
     id: "CUSTOM",

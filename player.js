@@ -273,7 +273,7 @@ function createMediaCard(item, type = 'movie') {
     posterImg.draggable = false;
     posterImg.decoding = "async";
     posterImg.src = item.poster_path
-        ? `${CONFIG.IMAGE_URL}/w400${item.poster_path}`
+        ? `${CONFIG.IMAGE_URL}/w342${item.poster_path}`
         : `${CONFIG.DOMAIN}/img/empty.png`;
     posterImg.alt = title;
     posterImg.loading = "lazy";
@@ -436,9 +436,12 @@ function servers(serverID) {
         const e = UI.episodeSelect.value || 1;
         if (provider === "AUTO") {
             try {
-                return localStorage.getItem('lastServer') || "S1";
+                const last = localStorage.getItem('lastServer');
+                if (last && last !== "AUTO" && SERVERS.some(s => s.id === last)) {
+                    return getUrl(last);
+                }
             } catch (e) { }
-            return "S1";
+            return getUrl("S1");
         }
 
         if (provider === "CUSTOM") {
@@ -562,6 +565,29 @@ window.addEventListener("message", function (event) {
 
             if (currentTime && duration) {
                 saveProgress(progress, currentTime, duration, msg.event || msg.type);
+            }
+        }
+        // 3. Vidsrc.ru / MEDIA_DATA format
+        else if (msg.type === "MEDIA_DATA" && msg.data) {
+            const mediaData = msg.data;
+            let currentTime = 0;
+            let duration = 0;
+            if (mediaData.type === 'movie' && mediaData.progress) {
+                currentTime = mediaData.progress.watched || 0;
+                duration = mediaData.progress.duration || 0;
+            } else if (mediaData.type === 'tv' && mediaData.show_progress) {
+                const s = UI.seasonSelect.value || 1;
+                const e = UI.episodeSelect.value || 1;
+                const key = `s${s}e${e}`;
+                const epData = mediaData.show_progress[key] || Object.values(mediaData.show_progress)[0];
+                if (epData && epData.progress) {
+                    currentTime = epData.progress.watched || 0;
+                    duration = epData.progress.duration || 0;
+                }
+            }
+            if (currentTime > 0 && duration > 0) {
+                const progress = (currentTime / duration) * 100;
+                saveProgress(progress, currentTime, duration, "timeupdate");
             }
         }
     } catch (e) {

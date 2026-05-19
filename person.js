@@ -122,7 +122,7 @@ async function loadPerson(personId) {
     UI.placeOfBirth.textContent = details.place_of_birth || "N/A";
     
     if (details.profile_path) {
-        UI.image.src = `${CONFIG.IMAGE_URL}/w400${details.profile_path}`;
+        UI.image.src = `${CONFIG.IMAGE_URL}/w342${details.profile_path}`;
     }
 
     const credits = await fetchTMDB(`/person/${personId}/combined_credits`);
