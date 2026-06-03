@@ -65,7 +65,7 @@ async function loadCalendar() {
         : { 'first_air_date.gte': startDate, 'first_air_date.lte': endDate };
 
     const now = new Date();
-    const isFuture = currentYear > now.getFullYear() || (currentYear === now.getFullYear() && currentMonth > now.getMonth());
+    const isPast = currentYear < now.getFullYear() || (currentYear === now.getFullYear() && currentMonth < now.getMonth());
 
     const params = {
         ...dateParam,
@@ -73,10 +73,8 @@ async function loadCalendar() {
         page: '1'
     };
 
-    if (!isFuture) {
+    if (isPast) {
         params['vote_count.gte'] = '10';
-    } else {
-        params.with_original_language = 'en';
     }
 
     const data = await fetchTMDB(`/discover/${currentType}`, params);
