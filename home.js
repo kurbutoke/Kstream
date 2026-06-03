@@ -659,11 +659,26 @@ function initLibraryPopup() {
             el.onclick = () => { window.location.href = `player.html?media=${fav.media}&id=${fav.id}`; };
 
             const img = document.createElement('img');
-            img.src = fav.poster_path
-                ? `${CONFIG.IMAGE_URL}/w92${fav.poster_path}`
-                : `${CONFIG.DOMAIN}/img/empty.png`;
             img.alt = fav.title || '';
             img.loading = 'lazy';
+
+            if (fav.poster_path) {
+                img.src = `${CONFIG.IMAGE_URL}/w92${fav.poster_path}`;
+            } else {
+                img.src = `${CONFIG.DOMAIN || ''}/img/empty.png`;
+                fetchTMDB(`/${fav.media}/${fav.id}`).then(data => {
+                    if (data?.poster_path) {
+                        img.src = `${CONFIG.IMAGE_URL}/w92${data.poster_path}`;
+                        const favorites = getFavorites();
+                        const idx = favorites.findIndex(f => f.media === fav.media && String(f.id) === String(fav.id));
+                        if (idx !== -1) {
+                            favorites[idx].poster_path = data.poster_path;
+                            favorites[idx].title = favorites[idx].title || data.title || data.name || '';
+                            localStorage.setItem('favorites', JSON.stringify(favorites));
+                        }
+                    }
+                });
+            }
 
             const title = document.createElement('div');
             title.className = 'library-poster-title';
