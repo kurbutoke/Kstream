@@ -1,0 +1,117 @@
+<h2>Popup Librairie — quel style ?</h2>
+<p class="subtitle">L'icône librairie est à droite du bouton calendrier. Le popup s'ouvre en cliquant dessus. Choisis le style qui te parle le plus.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#111;padding:16px;border-radius:8px;min-height:220px;display:flex;flex-direction:column;gap:10px">
+      <!-- Search bar row -->
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;background:#1e1e1e;border-radius:24px;height:38px;border:1px solid #333;display:flex;align-items:center;padding:0 14px">
+          <span style="color:#555;font-size:12px">🔍 Search...</span>
+        </div>
+        <div style="width:38px;height:38px;background:#1a1a1a;border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#00acc1;font-size:14px">📅</div>
+        <div style="width:38px;height:38px;background:#00acc1;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px">🔖</div>
+      </div>
+      <!-- Popup -->
+      <div style="background:#1a1a1a;border:1px solid #00acc133;border-radius:12px;padding:12px;margin-top:4px">
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <div style="background:#00acc1;color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600">Tout</div>
+          <div style="background:#222;color:#888;border-radius:20px;padding:4px 12px;font-size:11px">Films</div>
+          <div style="background:#222;color:#888;border-radius:20px;padding:4px 12px;font-size:11px">Séries</div>
+        </div>
+        <div style="display:flex;gap:8px;overflow:hidden">
+          <div style="width:48px;height:70px;background:#2a2a2a;border-radius:6px;flex-shrink:0"></div>
+          <div style="width:48px;height:70px;background:#2a2a2a;border-radius:6px;flex-shrink:0"></div>
+          <div style="width:48px;height:70px;background:#2a2a2a;border-radius:6px;flex-shrink:0"></div>
+          <div style="width:48px;height:70px;background:#2a2a2a;border-radius:6px;flex-shrink:0"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Dropdown compact</h3>
+      <p>Popup fin qui s'ouvre juste sous les boutons, scroll horizontal pour les posters. Discret, reste dans la barre.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#111;padding:16px;border-radius:8px;min-height:220px;display:flex;flex-direction:column;gap:10px">
+      <!-- Search bar row -->
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;background:#1e1e1e;border-radius:24px;height:38px;border:1px solid #333;display:flex;align-items:center;padding:0 14px">
+          <span style="color:#555;font-size:12px">🔍 Search...</span>
+        </div>
+        <div style="width:38px;height:38px;background:#1a1a1a;border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#00acc1;font-size:14px">📅</div>
+        <div style="width:38px;height:38px;background:#1a1a1a;border:1px solid #00acc1;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#00acc1;font-size:14px">🔖</div>
+      </div>
+      <!-- Overlay -->
+      <div style="position:relative">
+        <div style="background:rgba(0,0,0,0.5);border-radius:8px;padding:8px;font-size:10px;color:#555;text-align:center">— overlay derrière —</div>
+        <div style="background:#1a1a1a;border:1px solid #00acc155;border-radius:16px;padding:14px;margin-top:4px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <span style="color:#fff;font-weight:700;font-size:13px">Ma Librairie</span>
+            <span style="color:#555;font-size:10px">✕</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:12px">
+            <div style="background:#00acc1;color:#fff;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:600">Tout</div>
+            <div style="background:#222;color:#888;border-radius:20px;padding:4px 10px;font-size:10px">Films</div>
+            <div style="background:#222;color:#888;border-radius:20px;padding:4px 10px;font-size:10px">Séries</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+            <div style="background:#2a2a2a;border-radius:6px;aspect-ratio:2/3"></div>
+            <div style="background:#2a2a2a;border-radius:6px;aspect-ratio:2/3"></div>
+            <div style="background:#2a2a2a;border-radius:6px;aspect-ratio:2/3"></div>
+            <div style="background:#2a2a2a;border-radius:6px;aspect-ratio:2/3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Modal centré</h3>
+      <p>Fenêtre modale avec overlay sombre, grid de posters 4 colonnes, bouton fermer. Plus grand, plus lisible.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#111;padding:16px;border-radius:8px;min-height:220px;display:flex;flex-direction:column;gap:10px">
+      <!-- Search bar row -->
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;background:#1e1e1e;border-radius:24px;height:38px;border:1px solid #333;display:flex;align-items:center;padding:0 14px">
+          <span style="color:#555;font-size:12px">🔍 Search...</span>
+        </div>
+        <div style="width:38px;height:38px;background:#1a1a1a;border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#00acc1;font-size:14px">📅</div>
+        <div style="width:38px;height:38px;background:#1a1a1a;border:1px solid #00acc1;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#00acc1;font-size:14px">🔖</div>
+      </div>
+      <!-- Side panel -->
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;background:#1e1e1e;border-radius:8px;height:140px;opacity:0.3"></div>
+        <div style="width:160px;background:#1a1a1a;border:1px solid #00acc133;border-radius:12px;padding:10px;flex-shrink:0">
+          <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">
+            <div style="background:#00acc1;color:#fff;border-radius:12px;padding:2px 8px;font-size:9px;font-weight:600">Tout</div>
+            <div style="background:#222;color:#888;border-radius:12px;padding:2px 8px;font-size:9px">Films</div>
+            <div style="background:#222;color:#888;border-radius:12px;padding:2px 8px;font-size:9px">Séries</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:5px">
+              <div style="width:24px;height:36px;background:#2a2a2a;border-radius:4px;flex-shrink:0"></div>
+              <div style="font-size:9px;color:#aaa">Titre du film 1</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px">
+              <div style="width:24px;height:36px;background:#2a2a2a;border-radius:4px;flex-shrink:0"></div>
+              <div style="font-size:9px;color:#aaa">Titre série 2</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px">
+              <div style="width:24px;height:36px;background:#2a2a2a;border-radius:4px;flex-shrink:0"></div>
+              <div style="font-size:9px;color:#aaa">Titre du film 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Panneau latéral droit</h3>
+      <p>Slide depuis la droite de l'écran, liste verticale avec miniatures. Adapté à beaucoup de médias.</p>
+    </div>
+  </div>
+
+</div>

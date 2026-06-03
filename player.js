@@ -666,13 +666,15 @@ function setFavorites(favorites) {
 
 function toggleFavorite(mediaType, mediaId) {
     const favorites = getFavorites();
-    const exists = favorites.some(f => f.media === mediaType && f.id === mediaId);
+    const sid = String(mediaId);
+    const exists = favorites.some(f => f.media === mediaType && String(f.id) === sid);
 
     let newFavorites;
     if (exists) {
-        newFavorites = favorites.filter(f => !(f.media === mediaType && f.id === mediaId));
+        newFavorites = favorites.filter(f => !(f.media === mediaType && String(f.id) === sid));
     } else {
-        favorites.push({ media: mediaType, id: mediaId });
+        const cur = window.currentMediaData || {};
+        favorites.push({ media: mediaType, id: sid, title: cur.title || '', poster_path: cur.poster_path || null });
         newFavorites = favorites;
     }
 
@@ -682,7 +684,8 @@ function toggleFavorite(mediaType, mediaId) {
 
 function updateBookmarkIcon(mediaType, mediaId) {
     const favorites = getFavorites();
-    const exists = favorites.some(f => f.media === mediaType && f.id === mediaId);
+    const sid = String(mediaId);
+    const exists = favorites.some(f => f.media === mediaType && String(f.id) === sid);
 
     if (exists) {
         UI.bookmarkIcon.classList.remove('bi-bookmark');

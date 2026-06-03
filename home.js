@@ -8,6 +8,22 @@ const CONFIG = window.KSTREAM_CONFIG || {
 
 const UTILS = window.KSTREAM_UTILS || {};
 
+let userCountry = null;
+
+let userCountryName = null;
+
+async function detectCountry() {
+    try {
+        const res = await fetch('https://get.geojs.io/v1/ip/country.json');
+        const data = await res.json();
+        userCountry = data.country || null;
+        userCountryName = data.name || userCountry;
+    } catch (e) {
+        userCountry = null;
+        userCountryName = null;
+    }
+}
+
 const ELEMENTS = {
     searchInput: document.getElementById("searchInput"),
     searchResults: document.getElementById("search-results"),
@@ -212,7 +228,7 @@ window.updateTrending = async function (type, tab) {
     const container = ELEMENTS.trendingItems;
     showSkeletons(container);
 
-    let endpoint = type === 'movie' ? '/trending/movie/week' : '/trending/tv/week';
+    const endpoint = type === 'movie' ? '/trending/movie/week' : '/trending/tv/week';
     const data = await fetchTMDB(endpoint);
 
     container.innerHTML = "";
@@ -227,6 +243,27 @@ window.updateTrending = async function (type, tab) {
             fragment.appendChild(viewAllBtn);
         }
 
+        container.appendChild(fragment);
+        enableDragScroll(container);
+    }
+};
+
+window.updatePopularLocal = async function (type, tab) {
+    if (tab) handleTabActive(tab);
+
+    const container = document.getElementById('popular-local-items');
+    showSkeletons(container);
+
+    const data = await fetchTMDB(type === 'movie' ? '/movie/popular' : '/tv/popular', { region: userCountry });
+
+    container.innerHTML = "";
+    if (data && data.results) {
+        const fragment = document.createDocumentFragment();
+        data.results.slice(0, 10).forEach(item => {
+            fragment.appendChild(createMediaCard(item, type));
+        });
+        const viewAllBtn = createViewAllButton(type, 'popular');
+        fragment.appendChild(viewAllBtn);
         container.appendChild(fragment);
         enableDragScroll(container);
     }
@@ -579,11 +616,105 @@ function enableDragScroll(container) {
     container.style.cursor = 'grab';
 }
 
-window.addEventListener("load", () => {
+function initLibraryPopup() {
+    const btn = document.getElementById('library-btn');
+    const popup = document.getElementById('library-popup');
+    const icon = document.getElementById('library-icon');
+    const itemsEl = document.getElementById('library-popup-items');
+    const emptyEl = document.getElementById('library-empty');
+    const filterBtns = document.querySelectorAll('.lib-filter');
+
+    if (!btn || !popup) return;
+
+    let currentFilter = 'all';
+
+    function getFavorites() {
+        try { return JSON.parse(localStorage.getItem('favorites')) || []; } catch (e) { return []; }
+    }
+
+    function updateIcon() {
+        const hasFavs = getFavorites().length > 0;
+        icon.className = hasFavs ? 'bi bi-bookmark-fill' : 'bi bi-bookmark';
+    }
+
+    function render() {
+        const favorites = getFavorites();
+        const filtered = currentFilter === 'all' ? favorites : favorites.filter(f => f.media === currentFilter);
+
+        itemsEl.innerHTML = '';
+
+        if (filtered.length === 0) {
+            emptyEl.style.display = 'block';
+            itemsEl.style.display = 'none';
+            return;
+        }
+
+        emptyEl.style.display = 'none';
+        itemsEl.style.display = 'flex';
+
+        filtered.forEach(fav => {
+            const el = document.createElement('div');
+            el.className = 'library-poster-item';
+            el.title = fav.title || '';
+            el.onclick = () => { window.location.href = `player.html?media=${fav.media}&id=${fav.id}`; };
+
+            const img = document.createElement('img');
+            img.src = fav.poster_path
+                ? `${CONFIG.IMAGE_URL}/w92${fav.poster_path}`
+                : `${CONFIG.DOMAIN}/img/empty.png`;
+            img.alt = fav.title || '';
+            img.loading = 'lazy';
+
+            const title = document.createElement('div');
+            title.className = 'library-poster-title';
+            title.textContent = fav.title || '';
+
+            el.appendChild(img);
+            el.appendChild(title);
+            itemsEl.appendChild(el);
+        });
+    }
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        popup.classList.toggle('open');
+        if (popup.classList.contains('open')) render();
+    });
+
+    filterBtns.forEach(filterBtn => {
+        filterBtn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            filterBtn.classList.add('active');
+            currentFilter = filterBtn.dataset.filter;
+            render();
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!popup.contains(e.target) && e.target !== btn) {
+            popup.classList.remove('open');
+        }
+    });
+
+    updateIcon();
+}
+
+window.addEventListener("load", async () => {
     updateTrending('movie');
     updateActors();
     updateMovies('top_rated');
     updateSeries('top_rated');
-    updateFavorites('all');
     updateHistory();
+    initLibraryPopup();
+
+    await detectCountry();
+    if (userCountry) {
+        const header = document.getElementById('popular-local-header');
+        const items = document.getElementById('popular-local-items');
+        const title = document.getElementById('popular-local-title');
+        if (header) header.style.display = '';
+        if (items) items.style.display = '';
+        if (title) title.textContent = `Popular in ${userCountryName || userCountry}`;
+        updatePopularLocal('movie');
+    }
 });

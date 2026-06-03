@@ -78,19 +78,22 @@ async function loadCalendar() {
     }
 
     const data = await fetchTMDB(`/discover/${currentType}`, params);
+    const totalPages = Math.min(data?.total_pages || 1, 5);
 
-    let page2Data = null;
-    if (data && data.total_pages > 1) {
-        page2Data = await fetchTMDB(`/discover/${currentType}`, { ...params, page: '2' });
+    const extraPages = [];
+    for (let p = 2; p <= totalPages; p++) {
+        extraPages.push(fetchTMDB(`/discover/${currentType}`, { ...params, page: String(p) }));
     }
+    const extraData = await Promise.all(extraPages);
 
     const releases = {};
     const allResults = [
         ...(data?.results || []),
-        ...(page2Data?.results || [])
+        ...extraData.flatMap(d => d?.results || [])
     ];
 
     allResults.forEach(item => {
+        if (!item.poster_path) return;
         const date = currentType === 'movie' ? item.release_date : item.first_air_date;
         if (!date) return;
         const day = parseInt(date.split('-')[2], 10);
@@ -99,7 +102,17 @@ async function loadCalendar() {
     });
 
     renderCalendar(releases);
+    updateNavButtons();
     isLoading = false;
+}
+
+function updateNavButtons() {
+    const now = new Date();
+    const nextMonth = now.getMonth() + 1 > 11 ? 0 : now.getMonth() + 1;
+    const nextYear = now.getMonth() + 1 > 11 ? now.getFullYear() + 1 : now.getFullYear();
+    const atMax = currentYear > nextYear || (currentYear === nextYear && currentMonth >= nextMonth);
+    CAL.nextBtn.style.opacity = atMax ? '0.3' : '';
+    CAL.nextBtn.style.pointerEvents = atMax ? 'none' : '';
 }
 
 function renderCalendar(releases) {
@@ -180,6 +193,10 @@ CAL.prevBtn.addEventListener('click', () => {
 });
 
 CAL.nextBtn.addEventListener('click', () => {
+    const now = new Date();
+    const nextMonth = now.getMonth() + 1 > 11 ? 0 : now.getMonth() + 1;
+    const nextYear = now.getMonth() + 1 > 11 ? now.getFullYear() + 1 : now.getFullYear();
+    if (currentYear > nextYear || (currentYear === nextYear && currentMonth >= nextMonth)) return;
     currentMonth++;
     if (currentMonth > 11) {
         currentMonth = 0;

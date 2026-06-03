@@ -1,14 +1,14 @@
-# Kstream - Free Movies & TV Series Streaming
+# Kstream - Free Movies & TV Streaming
 
 [![Visit Kstream](https://img.shields.io/badge/Visit-Kstream-00acc1?style=for-the-badge&logo=google-chrome&logoColor=white)](https://kurbutoke.github.io/Kstream/)
 
-**Kstream** is a modern, responsive, and ad-free streaming web application that allows users to watch their favorite movies and TV shows without registration. Built with vanilla HTML, CSS, and JavaScript, it leverages the TMDb API for content metadata and multiple streaming providers for video playback.
+**Kstream** is a modern, responsive, and ad-free streaming web application that allows users to watch their favorite movies and TV without registration. Built with vanilla HTML, CSS, and JavaScript, it leverages the TMDb API for content metadata and multiple streaming providers for video playback.
 
 ![Home Page](./img/screenshots/home.png)
 
 ## ✨ Features
 
--   **🎬 Massive Library**: Access to thousands of Movies and TV Series via The Movie Database (TMDb) API.
+-   **🎬 Massive Library**: Access to thousands of Movies and TV via The Movie Database (TMDb) API.
 -   **🚫 No Registration Required**: Start watching immediately without creating an account.
 -   **📱 Fully Responsive**: Optimized for Desktop, Tablet, and Mobile devices.
 -   **🔍 Smart Search**: Instant search with auto-suggestions for movies, shows, and actors.

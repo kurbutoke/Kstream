@@ -67,8 +67,8 @@
     <header>
       <div class="container nav-bar">
         <div class="logo-row">
-          <img class="home" id="home" onclick="window.location.href = '/Kstream/'" src="./img/logo.svg"
-            alt="Kstream" width="141" height="47" style="cursor: pointer;">
+          <img class="home" id="home" onclick="window.location.href = '/Kstream/'" src="./img/logo.svg" alt="Kstream"
+            width="141" height="47" style="cursor: pointer;">
         </div>
 
       </div>
@@ -100,7 +100,7 @@
   const rawType = urlParams.get('type') || 'movie';
   const type = rawType === 'tv' ? 'tv' : 'movie';
 
-  document.getElementById('page-title').textContent = `Browse ${type === 'movie' ? 'Movie' : 'TV Series'} Genres`;
+  document.getElementById('page-title').textContent = `Browse ${type === 'movie' ? 'Movie' : 'TV'} Genres`;
 
   const movieGenres = [
     { id: '28', name: 'Action', icon: 'bi-fire' },

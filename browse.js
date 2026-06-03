@@ -48,7 +48,7 @@ function getURLParameters() {
     currentCategory = urlParams.get('category') || 'popular';
     currentQuery = UTILS.normalizeInput ? UTILS.normalizeInput(urlParams.get('query') || '', 60) : (urlParams.get('query') || '');
 
-    const typeTitle = currentType === 'movie' ? 'Movies' : 'TV Series';
+    const typeTitle = currentType === 'movie' ? 'Movies' : 'TV';
     let categoryTitle = currentCategory.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
     if (currentCategory === 'search' && currentQuery) {
@@ -95,7 +95,7 @@ async function loadContent() {
             const urlParams = new URLSearchParams(window.location.search);
             const titleParam = urlParams.get('title');
             if (titleParam) {
-                UI.title.textContent = `${decodeURIComponent(titleParam)} ${currentType === 'movie' ? 'Movies' : 'TV Series'}`;
+                UI.title.textContent = `${decodeURIComponent(titleParam)} ${currentType === 'movie' ? 'Movies' : 'TV'}`;
                 document.title = `${UI.title.textContent} - Kstream`;
             }
         } else {
