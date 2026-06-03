@@ -1399,12 +1399,12 @@ footer .abs .bottom-text {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding-top: 10px;
+    padding-top: 22px;
     padding-bottom: 10px;
 }
 
 header {
-    margin-bottom: 30px;
+    margin-bottom: 16px;
 }
 
 .logo-row {
@@ -1991,7 +1991,10 @@ header {
 /* Responsive header */
 @media (max-width: 600px) {
     header {
-        margin-bottom: 16px;
+        margin-bottom: 10px;
+    }
+    .nav-bar {
+        padding-top: 14px;
     }
 }
 
