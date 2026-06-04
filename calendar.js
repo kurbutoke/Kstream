@@ -3,6 +3,7 @@ const CAL = {
     monthTitle: document.getElementById('month-title'),
     prevBtn: document.getElementById('prev-month'),
     nextBtn: document.getElementById('next-month'),
+    todayBtn: document.getElementById('today-btn'),
     tabs: document.querySelectorAll('.calendar-tabs .tab-pill')
 };
 
@@ -212,6 +213,13 @@ CAL.tabs.forEach(tab => {
         currentType = tab.dataset.type;
         loadCalendar();
     });
+});
+
+CAL.todayBtn.addEventListener('click', () => {
+    const now = new Date();
+    currentMonth = now.getMonth();
+    currentYear = now.getFullYear();
+    loadCalendar();
 });
 
 window.addEventListener('load', loadCalendar);

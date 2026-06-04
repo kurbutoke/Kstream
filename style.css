@@ -852,9 +852,9 @@ a:hover {
         justify-content: center;
     }
 
-    #season-episode-selection>div {
-        padding: 10px 0 !important;
-        min-width: 0 !important;
+    #season-episode-selection > div.item {
+        padding: 10px 0;
+        min-width: 0;
     }
 
     #season-episode-selection select {
@@ -1030,6 +1030,109 @@ footer .abs {
     color: #666;
 }
 
+/* =====================================================
+   IMAGE SKELETON
+   ===================================================== */
+.img-skeleton {
+    background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+
+/* =====================================================
+   API ERROR TOAST
+   ===================================================== */
+.api-error-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(20, 20, 20, 0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 80, 80, 0.3);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
+
+.api-error-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.api-error-toast .bi {
+    color: #ff6b6b;
+    font-size: 1rem;
+}
+
+/* =====================================================
+   CALENDAR — BOUTON TODAY
+   ===================================================== */
+.cal-today-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-left: 4px;
+}
+
+.cal-today-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+/* =====================================================
+   LIBRARY — BOUTON SUPPRIMER
+   ===================================================== */
+.library-poster-item {
+    position: relative;
+}
+
+.library-poster-delete {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    padding: 0;
+}
+
+.library-poster-item:hover .library-poster-delete {
+    display: flex;
+}
+
+.library-poster-delete:hover {
+    background: #e53935;
+    border-color: #e53935;
+}
+
 footer .abs .bottom-text {
     color: #444;
     font-size: 0.8rem;
@@ -1089,8 +1192,8 @@ footer .abs .bottom-text {
     transition: 0.3s;
 }
 
-.bi-bookmark-fill {
-    color: #fff !important;
+#bookmark.bi-bookmark-fill {
+    color: #fff;
 }
 
 @media (max-width: 1024px) {

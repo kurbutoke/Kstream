@@ -38,7 +38,6 @@ const ELEMENTS = {
 
 async function fetchTMDB(endpoint, params = {}) {
     const url = new URL(`${CONFIG.BASE_URL}${endpoint}`);
-    url.searchParams.append("api_key", CONFIG.API_KEY);
     url.searchParams.append("language", "en-US");
 
     for (const [key, value] of Object.entries(params)) {
@@ -53,8 +52,24 @@ async function fetchTMDB(endpoint, params = {}) {
         return await response.json();
     } catch (error) {
         console.error("Fetch error:", error);
+        showApiError();
         return null;
     }
+}
+
+let _errorShown = false;
+function showApiError() {
+    if (_errorShown) return;
+    _errorShown = true;
+    const toast = document.createElement('div');
+    toast.className = 'api-error-toast';
+    toast.innerHTML = '<i class="bi bi-wifi-off"></i> Connexion au service impossible. Certains contenus peuvent ne pas s\'afficher.';
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('visible'));
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        toast.addEventListener('transitionend', () => toast.remove());
+    }, 5000);
 }
 
 function showSkeletons(container, count = 10) {
@@ -680,12 +695,20 @@ function initLibraryPopup() {
                 });
             }
 
-            const title = document.createElement('div');
-            title.className = 'library-poster-title';
-            title.textContent = fav.title || '';
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'library-poster-delete';
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.title = 'Retirer';
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                const updated = getFavorites().filter(f => !(f.media === fav.media && String(f.id) === String(fav.id)));
+                localStorage.setItem('favorites', JSON.stringify(updated));
+                updateIcon();
+                render();
+            };
 
             el.appendChild(img);
-            el.appendChild(title);
+            el.appendChild(deleteBtn);
             itemsEl.appendChild(el);
         });
     }

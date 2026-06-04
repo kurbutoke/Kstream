@@ -143,6 +143,7 @@ function createMediaCard(item, type = 'movie', options = {}) {
     posterDiv.appendChild(overlay);
 
     const posterLink = document.createElement("div");
+    posterLink.classList.add("img-skeleton");
     const posterImg = document.createElement("img");
     posterImg.draggable = false;
     posterImg.src = item.poster_path
@@ -153,7 +154,10 @@ function createMediaCard(item, type = 'movie', options = {}) {
 
     posterImg.style.opacity = "0";
     posterImg.style.transition = "opacity 0.4s ease";
-    posterImg.onload = () => posterImg.style.opacity = "1";
+    posterImg.onload = () => {
+        posterImg.style.opacity = "1";
+        posterLink.classList.remove("img-skeleton");
+    };
 
     posterLink.appendChild(posterImg);
     posterDiv.appendChild(posterLink);
