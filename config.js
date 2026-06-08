@@ -18,8 +18,8 @@ window.KSTREAM_SERVERS = [
   {
     id: "S1",
     name: "Videasy",
-    movie: ({id}) => `https://player.videasy.net/movie/${id}`,
-    tv: ({id, s, e}) => `https://player.videasy.net/tv/${id}/${s}/${e}`
+    movie: ({id}) => `https://player.videasy.to/movie/${id}`,
+    tv: ({id, s, e}) => `https://player.videasy.to/tv/${id}/${s}/${e}`
   },
   {
     id: "S2",

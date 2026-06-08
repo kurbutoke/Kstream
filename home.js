@@ -665,7 +665,7 @@ function initLibraryPopup() {
         }
 
         emptyEl.style.display = 'none';
-        itemsEl.style.display = 'flex';
+        itemsEl.style.display = 'grid';
 
         filtered.forEach(fav => {
             const el = document.createElement('div');
